@@ -11,4 +11,15 @@ public class Tabellone {
         if (indice >= 0 && indice < 40) {
             caselle[indice] = c;
         }
+    }// Restituisce l'oggetto Casella dato un indice
+    public Casella getCasella(int indice) {
+        return caselle[indice];
+    }
+
+    // Calcola la nuova posizione usando l'operatore modulo (%)
+    // Questo serve perché se sono alla casella 39 e faccio 2 passi,
+    // devo finire alla casella 1, non alla 41 (che non esiste)
+    public int calcolaProssimaPosizione(int posIniziale, int passi) {
+        int nuovaPos = (posIniziale + passi) % 40;
+        return nuovaPos;
     }
