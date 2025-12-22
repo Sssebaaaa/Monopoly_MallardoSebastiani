@@ -87,4 +87,14 @@ public class Partita {
                 eseguiTurno(indiceGiocatore); // Chiamata ricorsiva per rigiocare subito
             }
         }
+    }// Rimuove un giocatore che ha finito i soldi
+    public void rimuoviGiocatore(int indice) {
+        Giocatore g = giocatori[indice];
+        
+        // Restituisco le proprietà alla banca (metodo ipotetico di Davide)
+        // g.restituisciProprieta(banca);
+        
+        // Metto a null la posizione nell'array per indicare che non gioca più
+        giocatori[indice] = null;
+        giocatoriAttivi = giocatoriAttivi - 1;
     }
