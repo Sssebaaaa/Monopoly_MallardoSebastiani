@@ -1,3 +1,4 @@
+package Files;
 public class Dadi {
     // Variabili per memorizzare i valori dei due dadi
     private int valore1;
