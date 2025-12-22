@@ -15,4 +15,13 @@ public class Dadi {
         valore2 = (int)(Math.random() * 6) + 1;
         
         System.out.println("Dadi lanciati: " + valore1 + " - " + valore2);
+    }// Restituisce la somma dei due dadi per il movimento
+    public int getTotale() {
+        return valore1 + valore2;
     }
+
+    // Controlla se è uscito un doppio (per tirare di nuovo o uscire di prigione)
+    public boolean isDoppio() {
+        return valore1 == valore2;
+    }
+}
