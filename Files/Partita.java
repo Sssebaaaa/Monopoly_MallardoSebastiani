@@ -75,4 +75,16 @@ public class Partita {
 
         // Eseguo l'azione della casella (paga affitto, pesca carta, compra, ecc.)
         // Passo 'this' (l'oggetto Partita) perché alcune caselle devono accedere a mazzi o banca
-        casellaArrivo.azione(g, this);
+        casellaArrivo.azione(g, this);// CONTROLLO FALLIMENTO
+        if (g.getSoldi() < 0) {
+            System.out.println("GIOCATORE FALLITO! " + g.getNome() + " esce dal gioco.");
+            rimuoviGiocatore(indiceGiocatore);
+        } else {
+            // GESTIONE DOPPI (Rigioca)
+            // Se ha fatto doppio e non è finito in prigione in questo turno
+            if (dadi.isDoppio() && !g.isInPrigione()) {
+                System.out.println("Hai fatto doppio! Tiri di nuovo.");
+                eseguiTurno(indiceGiocatore); // Chiamata ricorsiva per rigiocare subito
+            }
+        }
+    }
