@@ -22,4 +22,8 @@ public class Tabellone {
     public int calcolaProssimaPosizione(int posIniziale, int passi) {
         int nuovaPos = (posIniziale + passi) % 40;
         return nuovaPos;
+    }// Restituisce la dimensione del tabellone (utile per i cicli)
+    public int getDimensione() {
+        return caselle.length;
     }
+}
