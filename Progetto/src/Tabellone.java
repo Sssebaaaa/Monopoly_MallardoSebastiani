@@ -1,4 +1,4 @@
-package Files;
+package Progetto.src;
 public class Tabellone {
     // Array fisso di 40 caselle (dimensione standard del Monopoly)
     private Casella[] caselle;

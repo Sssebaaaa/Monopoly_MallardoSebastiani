@@ -1,2 +1,0 @@
-# Monopoly_MallardoSebastiani
-

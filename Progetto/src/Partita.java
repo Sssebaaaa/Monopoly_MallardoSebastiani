@@ -1,4 +1,4 @@
-package Files;
+package Progetto.src;
 
 public class Partita {
     // Componenti principali del gioco
