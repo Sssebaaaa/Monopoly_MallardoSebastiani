@@ -97,4 +97,14 @@ public class Partita {
         // Metto a null la posizione nell'array per indicare che non gioca più
         giocatori[indice] = null;
         giocatoriAttivi = giocatoriAttivi - 1;
+    }// Metodo utile per il Main per sapere se continuare il ciclo
+    public int getGiocatoriAttivi() {
+        return giocatoriAttivi;
     }
+
+    // Getter per permettere alle caselle (es. Probabilità) di accedere ai mazzi
+    public Mazzo getMazzoImprevisti() { return mazzoImprevisti; }
+    public Mazzo getMazzoProbabilita() { return mazzoProbabilita; }
+    public Banca getBanca() { return banca; }
+    public Tabellone getTabellone() { return tabellone; }
+}
