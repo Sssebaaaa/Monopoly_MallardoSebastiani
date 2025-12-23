@@ -58,7 +58,7 @@ public class Giocatore {
         this.turniInPrigione = turniInPrigione;
     }
 
-    public boolean getInPrigione() {
+    public boolean isInPrigione() {
         return this.inPrigione;
     }
 

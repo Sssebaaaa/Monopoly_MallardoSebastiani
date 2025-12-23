@@ -7,7 +7,7 @@ class Casella_prigione extends Casella {
     }
 
     public void azione(Giocatore g, Partita p) {
-        if(g.getInPrigione()){
+        if(g.isInPrigione()){
             System.out.println(g.getNome() + " è in prigione");
         } else {
             System.out.println("Solo transito");
