@@ -18,6 +18,55 @@ public class Giocatore {
         this.inPrigione = false;
     }
 
+    public String getNome() {
+        return this.nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public int getSoldi() {
+        return this.soldi;
+    }
+
+    public void setSoldi(int soldi) {
+        this.soldi = soldi;
+    }
+
+    public int getPosizioneCorrente() {
+        return this.posizioneCorrente;
+    }
+
+    public void setPosizioneCorrente(int posizioneCorrente) {
+        this.posizioneCorrente = posizioneCorrente;
+    }
+
+    public Casella[] getProprietaPossedute() {
+        return this.proprietaPossedute;
+    }
+
+    public void setProprietaPossedute(Casella[] proprietaPossedute) {
+        this.proprietaPossedute = proprietaPossedute;
+    }
+
+    public int getTurniInPrigione() {
+        return this.turniInPrigione;
+    }
+
+    public void setTurniInPrigione(int turniInPrigione) {
+        this.turniInPrigione = turniInPrigione;
+    }
+
+    public boolean getInPrigione() {
+        return this.inPrigione;
+    }
+
+    public void setInPrigione(boolean inPrigione) {
+        this.inPrigione = inPrigione;
+    }
+
+   
     public void incassa(int somma){
         this.soldi += somma;
     }
