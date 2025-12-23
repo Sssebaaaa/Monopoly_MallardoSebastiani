@@ -89,6 +89,25 @@ public class Giocatore {
         this.turniInPrigione = 0;
     }
 
+    // Incrementa il contatore dei turni in prigione.
+    // Se raggiunge 3 turni, il giocatore paga automaticamente 50 (regola semplificata)
+    // e viene rimesso in libertà.
+    public void aumentaTurniPrigione() {
+        this.turniInPrigione++;
+        if (this.turniInPrigione >= 3) {
+            // Regola semplice: paga 50 e esce di prigione
+            int tassaUscita = 50;
+            if (this.soldi >= tassaUscita) {
+                this.paga(tassaUscita, null);
+                this.esciDiPrigione();
+                System.out.println(this.nome + " ha pagato " + tassaUscita + "€ ed è uscito di prigione.");
+            } else {
+                // Se non ha soldi sufficienti, rimane in prigione ma il contatore non supera 3
+                System.out.println(this.nome + " non ha abbastanza soldi per pagare la cauzione.");
+            }
+        }
+    }
+
     public boolean haSerieCompleta(String colore) {
         int contatoreColore = 0;
 

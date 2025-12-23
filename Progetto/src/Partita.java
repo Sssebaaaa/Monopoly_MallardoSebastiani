@@ -90,13 +90,14 @@ public class Partita {
     }// Rimuove un giocatore che ha finito i soldi
     public void rimuoviGiocatore(int indice) {
         Giocatore g = giocatori[indice];
-        
-        // Restituisco le proprietà alla banca (metodo ipotetico di Davide)
-        // g.restituisciProprieta(banca);
-        
-        // Metto a null la posizione nell'array per indicare che non gioca più
-        giocatori[indice] = null;
-        giocatoriAttivi = giocatoriAttivi - 1;
+            if (g != null) {
+                // Rimuovo le proprietà possedute dal giocatore e le resetto (metodo presente in Giocatore)
+                g.rimuoviProprieta();
+            }
+
+            // Metto a null la posizione nell'array per indicare che non gioca più
+            giocatori[indice] = null;
+            giocatoriAttivi = giocatoriAttivi - 1;
     }// Metodo utile per il Main per sapere se continuare il ciclo
     public int getGiocatoriAttivi() {
         return giocatoriAttivi;
@@ -107,4 +108,16 @@ public class Partita {
     public Mazzo getMazzoProbabilita() { return mazzoProbabilita; }
     public Banca getBanca() { return banca; }
     public Tabellone getTabellone() { return tabellone; }
+
+    // Restituisce una carta dal mazzo richiesto: "Imprevisti" o "Probabilita"
+    public Carta pesca(String tipo) {
+        if (tipo == null) return null;
+        if (tipo.equalsIgnoreCase("Imprevisti")) {
+            return mazzoImprevisti.pesca();
+        } else if (tipo.equalsIgnoreCase("Probabilita") || tipo.equalsIgnoreCase("Probabilità")) {
+            return mazzoProbabilita.pesca();
+        } else {
+            return null;
+        }
+    }
 }
