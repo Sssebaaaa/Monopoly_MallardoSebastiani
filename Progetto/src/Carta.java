@@ -35,9 +35,34 @@ class Carta {
         this.valore = valore;
     }
 
-    
+    public void applicaEffetto(Giocatore g, Partita p){
+        switch (idEffetto) {
+            case 1: // soldi
+                if (valore > 0){
+                    g.incassa(valore);
+                } else {
+                    int soldiDaPagare = valore * -1; 
+                    g.paga(soldiDaPagare, null);
+                }
+                break;
 
-    
-    
+            case 2: //movimento
+                g.muovi(valore);
+                break;
+
+            case 3: //vaiInprigione
+                g.setInPrigione(true);
+                break;
+
+            case 4: // vai al VIA
+                int passi = 40 - g.getPosizioneCorrente(); //calcola quanti passi servono per arrivare al VIA
+                g.muovi(passi); //lo sposta al VIA
+                break;
+                
+            default:
+                System.out.println("-");
+        }
+    }
+
 
 }
