@@ -84,8 +84,46 @@ public class Giocatore {
         this.posizioneCorrente = (this.posizioneCorrente + passi) % 40;
     }
 
-    
+    public void esciDiPrigione() {
+        this.inPrigione = false;
+        this.turniInPrigione = 0;
+    }
 
+    public boolean haSerieCompleta(String colore) {
+        int contatoreColore = 0;
+
+        for (int i = 0; i < proprietaPossedute.length; i++) {
+            if (proprietaPossedute[i] instanceof Casella_terreno) {
+                Casella_terreno terreno = (Casella_terreno) proprietaPossedute[i];
+                if (terreno.getColore().equals(colore)) {
+                    contatoreColore++;
+                }
+            }
+        }
+
+        if ((colore.equals("Marrone") || colore.equals("Blu")) && contatoreColore == 2) {
+            return true;
+        } else if((colore.equals("Rosa") || colore.equals("Arancione") || colore.equals("Rosso") || colore.equals("Giallo") || colore.equals("Verde") || colore.equals("Azzurro")) && contatoreColore == 3){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void acquistaProprieta(Casella proprieta){
+        Casella[] vettore = new Casella[this.proprietaPossedute.length+1];
+
+        for(int i=0; i<proprietaPossedute.length; i++){
+            vettore[i] = this.proprietaPossedute[i];
+        }
+        vettore[this.proprietaPossedute.length] = proprieta;
+
+        this.proprietaPossedute = vettore;
+    }
+
+    public void rimuoviProprieta(){
+        this.proprietaPossedute = new Casella[0];
+    }
 
 
 }
