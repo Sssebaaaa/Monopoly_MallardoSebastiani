@@ -121,7 +121,17 @@ public class Giocatore {
         this.proprietaPossedute = vettore;
     }
 
-    public void rimuoviProprieta(){
+    public void rimuoviProprieta() {
+        for (int i = 0; i < this.proprietaPossedute.length; i++) {
+            
+            Casella c = this.proprietaPossedute[i];
+            if (c instanceof Casella_terreno) {
+                ((Casella_terreno) c).setProprietario(null);
+            } else if (c instanceof Casella_stazione) {
+                ((Casella_stazione) c).setProprietario(null);
+            }
+        }
+
         this.proprietaPossedute = new Casella[0];
     }
 
