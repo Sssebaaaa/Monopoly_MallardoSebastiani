@@ -2,11 +2,18 @@ package Progetto.src;
 abstract class Casella {
     protected String nome;
     protected int id; // posizione sul tabellone (0-39)
+    protected Casella next;
+    protected Casella prev;
 
     public Casella(String nome, int id){
         this.nome = nome;
         this.id = id;
     }
+
+    public Casella getNext() { return next; }
+    public Casella getPrev() { return prev; }
+    public void setNext(Casella next) { this.next = next; }
+    public void setPrev(Casella prev) { this.prev = prev; }
 
     public String getNome() {
         return this.nome;

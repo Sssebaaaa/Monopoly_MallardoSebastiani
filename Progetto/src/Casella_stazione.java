@@ -40,7 +40,11 @@ class Casella_stazione extends Casella {
         if(this.proprietario != null && this.proprietario != g){
             g.paga(calcolaAffitto(), proprietario);
         } else if(this.proprietario == null){
-            System.out.println("Costo stazione: " + valoreAcquisto + "€");
+            System.out.println("Stazione in vendita: " + nome + " - prezzo: " + valoreAcquisto + "€");
+            if (g.getSoldi() >= valoreAcquisto) {
+                p.getBanca().vendiTerreno(this, g);
+                System.out.println(g.getNome() + " ha acquistato la stazione " + nome + " per " + valoreAcquisto + "€");
+            }
         }
     }
     

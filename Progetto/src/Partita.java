@@ -30,9 +30,65 @@ public class Partita {
         
         giocatoriAttivi = 4;
 
-        // 2. Creazione del tabellone
-        // Inserire qui le caselle (es. Casella_speciale, Casella_terreno...)
-        System.out.println("Partita inizializzata. Il tabellone e i giocatori sono pronti.");
+        // 2. Creazione del tabellone: riempiamo 40 caselle
+        for (int i = 0; i < tabellone.getDimensione(); i++) {
+            switch (i) {
+                case 0:
+                    tabellone.setCasella(i, new Casella_speciale("Via", i, 200));
+                    break;
+                case 10:
+                    tabellone.setCasella(i, new Casella_prigione("Prigione", i));
+                    break;
+                case 30:
+                    tabellone.setCasella(i, new Casella_vaiPrigione("Vai in prigione", i));
+                    break;
+                case 2:
+                case 7:
+                case 17:
+                case 33:
+                    tabellone.setCasella(i, new Casella_carta("Imprevisti", i, "Imprevisti"));
+                    break;
+                case 5:
+                case 15:
+                case 25:
+                case 35:
+                    tabellone.setCasella(i, new Casella_stazione("Stazione", i, 200));
+                    break;
+                default:
+                    String colore;
+                    int prezzo;
+                    int rendita;
+                    int costoCasa = 150;
+                    if (i % 3 == 0) { colore = "Azzurro"; prezzo = 100; rendita = 10; }
+                    else if (i % 3 == 1) { colore = "Arancione"; prezzo = 200; rendita = 20; }
+                    else { colore = "Verde"; prezzo = 300; rendita = 30; }
+                    tabellone.setCasella(i, new Casella_terreno("Terreno " + i, i, prezzo, rendita, costoCasa, colore));
+                    break;
+            }
+        }
+
+        // Colleghiamo next e prev per ogni casella (ciclo circolare)
+        for (int i = 0; i < tabellone.getDimensione(); i++) {
+            Casella c = tabellone.getCasella(i);
+            Casella next = tabellone.getCasella((i + 1) % tabellone.getDimensione());
+            Casella prev = tabellone.getCasella((i - 1 + tabellone.getDimensione()) % tabellone.getDimensione());
+            if (c != null) {
+                c.setNext(next);
+                c.setPrev(prev);
+            }
+        }
+
+        // 3. Creazione del mazzo Imprevisti
+        mazzoImprevisti = new Mazzo();
+        mazzoImprevisti.aggiungiCarta(new Carta("Hai trovato 100€ per strada", 1, 100));
+        mazzoImprevisti.aggiungiCarta(new Carta("Paghi 50€ di multa", 1, -50));
+        mazzoImprevisti.aggiungiCarta(new Carta("Avanzi di 3 caselle", 2, 3));
+        mazzoImprevisti.aggiungiCarta(new Carta("Torna al VIA", 4, 0));
+        mazzoImprevisti.aggiungiCarta(new Carta("Vai in prigione", 3, 0));
+        mazzoImprevisti.aggiungiCarta(new Carta("Ricevi 200€ dalla banca", 1, 200));
+        mazzoImprevisti.mescola();
+
+        System.out.println("Partita inizializzata. Tabellone e mazzo imprevisti pronti.");
     }// Gestisce un singolo turno di un giocatore
     public void eseguiTurno(int indiceGiocatore) {
         Giocatore g = giocatori[indiceGiocatore];
