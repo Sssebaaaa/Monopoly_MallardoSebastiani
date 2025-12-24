@@ -1,7 +1,7 @@
 package Progetto.src;
 abstract class Casella {
     protected String nome;
-    protected int id; //indica la posizione sul tabellone (0-39)
+    protected int id; // posizione sul tabellone (0-39)
 
     public Casella(String nome, int id){
         this.nome = nome;

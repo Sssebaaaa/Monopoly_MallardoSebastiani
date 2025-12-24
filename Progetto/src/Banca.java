@@ -3,7 +3,7 @@ package Progetto.src;
 class Banca {
     
     public void incassa(int somma){
-        System.out.println("Soldi incassati dalla banca: " + somma + "€");
+        System.out.println("Banca incassa: " + somma + "€");
     }
 
     public void vendiTerreno(Casella t, Giocatore g) {

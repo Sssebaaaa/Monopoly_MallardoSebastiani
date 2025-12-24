@@ -7,6 +7,7 @@ class Casella_vaiPrigione extends Casella {
     }
 
     public void azione(Giocatore g, Partita p){
+        // Manda il giocatore in prigione
         g.setInPrigione(true);
     }
     

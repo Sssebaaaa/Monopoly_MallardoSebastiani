@@ -14,10 +14,11 @@ public class Partita {
         this.tabellone = new Tabellone();
         this.dadi = new Dadi();
         this.banca = new Banca();
-        // I mazzi verranno creati da Davide, qui li istanzio vuoti o come richiesto
+        // Mazzi vuoti per ora
         this.mazzoImprevisti = new Mazzo(); 
         this.mazzoProbabilita = new Mazzo();
-    }// Configura tutto prima di iniziare
+    }
+    // Preparazione iniziale della partita
     public void iniziaPartita() {
         // 1. Creazione Giocatori
         // Esempio: Creiamo 4 giocatori
@@ -29,25 +30,21 @@ public class Partita {
         
         giocatoriAttivi = 4;
 
-        // 2. Creazione del Tabellone
-        // Qui dovrai inserire le caselle create da Davide.
-        // Esempio fittizio (questo pezzo lo completerai con le classi reali di Davide):
-        // tabellone.setCasella(0, new Casella_speciale("Via", 200));
-        // tabellone.setCasella(1, new Casella_terreno("Vicolo Corto", ...));
+        // 2. Creazione del tabellone
+        // Inserire qui le caselle (es. Casella_speciale, Casella_terreno...)
         System.out.println("Partita inizializzata. Il tabellone e i giocatori sono pronti.");
     }// Gestisce un singolo turno di un giocatore
     public void eseguiTurno(int indiceGiocatore) {
         Giocatore g = giocatori[indiceGiocatore];
 
-        // Se il giocatore è null significa che è stato eliminato, quindi salto
+    // Se il giocatore è null è stato eliminato, salto
         if (g == null) return;
 
         System.out.println("\n--- Turno di " + g.getNome() + " ---");
 
-        // GESTIONE PRIGIONE
-        // Se il giocatore è in prigione, controlliamo se può uscire
+        // Gestione prigione: se è in prigione prova a uscire
         if (g.isInPrigione()) {
-            // Logica semplificata: prova a tirare i dadi per fare doppio
+            // Semplice: tira i dadi per provare il doppio
             dadi.lancia();
             if (dadi.isDoppio()) {
                 g.esciDiPrigione();
@@ -58,7 +55,8 @@ public class Partita {
                 System.out.println("Niente doppio, resti in prigione.");
                 return; // Finisce il turno qui se non esce
             }
-        }// MOVIMENTO NORMALE
+    }
+    // Movimento normale
         dadi.lancia();
         int passi = dadi.getTotale();
         
@@ -66,15 +64,15 @@ public class Partita {
         int posizioneAttuale = g.getPosizioneCorrente();
         int nuovaPosizione = tabellone.calcolaProssimaPosizione(posizioneAttuale, passi);
         
-        // Muovo il giocatore (metodo di Davide)
+    // Muovo il giocatore
         g.muovi(nuovaPosizione);
         
         // Recupero la casella su cui è atterrato
         Casella casellaArrivo = tabellone.getCasella(nuovaPosizione);
         System.out.println("Sei atterrato su: " + casellaArrivo.getNome());
 
-        // Eseguo l'azione della casella (paga affitto, pesca carta, compra, ecc.)
-        // Passo 'this' (l'oggetto Partita) perché alcune caselle devono accedere a mazzi o banca
+    // Esegui l'azione della casella (affitto, pesca carta, ecc.)
+    // Passo 'this' in caso la casella debba accedere a mazzi o banca
         casellaArrivo.azione(g, this);// CONTROLLO FALLIMENTO
         if (g.getSoldi() < 0) {
             System.out.println("GIOCATORE FALLITO! " + g.getNome() + " esce dal gioco.");
@@ -87,7 +85,8 @@ public class Partita {
                 eseguiTurno(indiceGiocatore); // Chiamata ricorsiva per rigiocare subito
             }
         }
-    }// Rimuove un giocatore che ha finito i soldi
+    }
+    // Rimuove un giocatore che ha finito i soldi
     public void rimuoviGiocatore(int indice) {
         Giocatore g = giocatori[indice];
             if (g != null) {

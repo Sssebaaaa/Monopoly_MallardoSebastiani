@@ -2,22 +2,21 @@ package Progetto.src;
 
 public class Main {
     public static void main(String[] args) {
-        // Creo l'oggetto partita
+    // Crea la partita
         Partita partita = new Partita();
         
-        // Preparo tabellone e giocatori
+    // Prepara tabellone e giocatori
         partita.iniziaPartita();
 
         int turnoGiocatore = 0;
 
-        // CICLO DEL GIOCO
-        // Continua finché c'è più di un giocatore (cioè finché non vince qualcuno)
+    // Ciclo principale del gioco: prosegue finché rimane più di un giocatore
         while (partita.getGiocatoriAttivi() > 1) {
             
-            // Esegue il turno per il giocatore corrente
+            // Esegue il turno del giocatore corrente
             partita.eseguiTurno(turnoGiocatore);
 
-            // Passa al prossimo giocatore
+            // Prossimo giocatore
             turnoGiocatore++;
             
             // Se supero l'ultimo indice dell'array, ricomincio da 0 (giro circolare)

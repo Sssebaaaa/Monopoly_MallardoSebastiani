@@ -46,17 +46,17 @@ class Carta {
                 }
                 break;
 
-            case 2: //movimento
+            case 2: // movimento
                 g.muovi(valore);
                 break;
 
-            case 3: //vaiInprigione
+            case 3: // vai in prigione
                 g.setInPrigione(true);
                 break;
 
             case 4: // vai al VIA
-                int passi = 40 - g.getPosizioneCorrente(); //calcola quanti passi servono per arrivare al VIA
-                g.muovi(passi); //lo sposta al VIA
+                int passi = 40 - g.getPosizioneCorrente(); // passi fino al VIA
+                g.muovi(passi);
                 break;
                 
             default:

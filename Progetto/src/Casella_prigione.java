@@ -10,7 +10,7 @@ class Casella_prigione extends Casella {
         if(g.isInPrigione()){
             System.out.println(g.getNome() + " è in prigione");
         } else {
-            System.out.println("Solo transito");
+            System.out.println("Solo passaggio");
         }
     }
 }

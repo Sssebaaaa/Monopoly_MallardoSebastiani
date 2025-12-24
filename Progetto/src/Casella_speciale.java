@@ -17,7 +17,7 @@ class Casella_speciale extends Casella {
     }
 
     public void azione(Giocatore g, Partita p){
-        g.incassa(importo); //casella "VIA"
+        g.incassa(importo); // casella "VIA"
     }
 
 

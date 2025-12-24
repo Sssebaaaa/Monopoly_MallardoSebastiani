@@ -81,6 +81,7 @@ public class Giocatore {
     }
 
     public void muovi(int passi) {
+        // Aggiorna posizione (giro del tabellone)
         this.posizioneCorrente = (this.posizioneCorrente + passi) % 40;
     }
 
@@ -89,9 +90,8 @@ public class Giocatore {
         this.turniInPrigione = 0;
     }
 
-    // Incrementa il contatore dei turni in prigione.
-    // Se raggiunge 3 turni, il giocatore paga automaticamente 50 (regola semplificata)
-    // e viene rimesso in libertà.
+    // Aumenta i turni passati in prigione.
+    // Alla terza chiamata prova a pagare 50€ per uscire.
     public void aumentaTurniPrigione() {
         this.turniInPrigione++;
         if (this.turniInPrigione >= 3) {
@@ -102,7 +102,7 @@ public class Giocatore {
                 this.esciDiPrigione();
                 System.out.println(this.nome + " ha pagato " + tassaUscita + "€ ed è uscito di prigione.");
             } else {
-                // Se non ha soldi sufficienti, rimane in prigione ma il contatore non supera 3
+                // Se non ha abbastanza soldi resta in prigione
                 System.out.println(this.nome + " non ha abbastanza soldi per pagare la cauzione.");
             }
         }
@@ -120,6 +120,7 @@ public class Giocatore {
             }
         }
 
+        // Marrone e Blu hanno 2 case, gli altri colori ne hanno 3
         if ((colore.equals("Marrone") || colore.equals("Blu")) && contatoreColore == 2) {
             return true;
         } else if((colore.equals("Rosa") || colore.equals("Arancione") || colore.equals("Rosso") || colore.equals("Giallo") || colore.equals("Verde") || colore.equals("Azzurro")) && contatoreColore == 3){
