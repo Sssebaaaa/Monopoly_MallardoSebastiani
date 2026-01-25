@@ -55,7 +55,7 @@ class Carta {
                 break;
 
             case 4: // vai al VIA
-                int passi = 40 - g.getPosizioneCorrente(); // passi fino al VIA
+                int passi = 40 - g.getPosizioneCorrente(); //calcola quanti passi servono per arrivare al VIA
                 g.muovi(passi);
                 break;
                 

@@ -95,7 +95,6 @@ public class Giocatore {
     public void aumentaTurniPrigione() {
         this.turniInPrigione++;
         if (this.turniInPrigione >= 3) {
-            // Regola semplice: paga 50 e esce di prigione
             int tassaUscita = 50;
             if (this.soldi >= tassaUscita) {
                 this.paga(tassaUscita, null);

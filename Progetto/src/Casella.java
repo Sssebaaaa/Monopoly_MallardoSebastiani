@@ -10,10 +10,21 @@ abstract class Casella {
         this.id = id;
     }
 
-    public Casella getNext() { return next; }
-    public Casella getPrev() { return prev; }
-    public void setNext(Casella next) { this.next = next; }
-    public void setPrev(Casella prev) { this.prev = prev; }
+    public Casella getNext() { 
+        return next; 
+    }
+
+    public Casella getPrev() { 
+        return prev; 
+    }
+
+    public void setNext(Casella next) { 
+        this.next = next; 
+    }
+    
+    public void setPrev(Casella prev) { 
+        this.prev = prev; 
+    }
 
     public String getNome() {
         return this.nome;

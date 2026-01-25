@@ -71,13 +71,13 @@ class Casella_terreno extends Casella {
 
     public void azione(Giocatore g, Partita p){
         if(this.proprietario != null && this.proprietario != g){
-            // Paghi affitto al proprietario
+            // paghi affitto al proprietario
             int affitto = calcolaAffitto();
             g.paga(affitto, proprietario);
         } else if(this.proprietario == null){
             // La banca vende il terreno
             System.out.println("Terreno in vendita: " + nome + " - prezzo: " + valoreAcquisto + "€");
-            // Offerta automatica semplificata: il giocatore compra se ha abbastanza soldi
+            // il giocatore compra se ha abbastanza soldi
             if (g.getSoldi() >= valoreAcquisto) {
                 p.getBanca().vendiTerreno(this, g);
                 System.out.println(g.getNome() + " ha acquistato " + nome + " per " + valoreAcquisto + "€");
