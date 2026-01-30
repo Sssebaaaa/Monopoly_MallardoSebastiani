@@ -1,37 +1,30 @@
 package Progetto.src;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 class Mazzo {
-    private Carta[] carte;
+    private ArrayList<Carta> carte;
 
     public Mazzo() {
-        this.carte = new Carta[16];
+        this.carte = new ArrayList<>();
     }
 
-    public void mescola(){
-        for(int i=0; i<carte.length; i++){
-            int random = (int) (Math.random()*carte.length);
-            Carta temp = carte[i];
-            carte[i] = carte[random];
-            carte[random] = temp;
-        }
+    public void mescola() {
+        Collections.shuffle(this.carte);
     }
 
-    public Carta pesca(){
-        Carta carta = carte[0];
-        for(int i=0; i<carte.length-1; i++){
-            carte[i] = carte[i+1];
-        }
-        carte[carte.length-1] = carta;
-        return carta;
+    public Carta pesca() {
+        if (carte.isEmpty())
+            return null;
+        Carta c = carte.remove(0);
+        carte.add(c); // Cicla la carta in fondo
+        return c;
     }
 
     public void aggiungiCarta(Carta c) {
-        for (int i = 0; i < carte.length; i++) {
-            if (carte[i] == null) {
-                carte[i] = c;
-                return; 
-            }
+        if (c != null) {
+            this.carte.add(c);
         }
     }
-
 }

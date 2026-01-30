@@ -4,11 +4,11 @@ public class Giocatore {
     private String nome;
     private int soldi;
     private int posizioneCorrente;
-    private Casella[] proprietaPossedute; 
+    private Casella[] proprietaPossedute;
     private int turniInPrigione;
     private boolean inPrigione;
 
-    public Giocatore(String nome, int soldi){
+    public Giocatore(String nome, int soldi) {
         this.nome = nome;
         this.soldi = soldi;
         this.posizioneCorrente = 0;
@@ -66,23 +66,31 @@ public class Giocatore {
         this.inPrigione = inPrigione;
     }
 
-   
-    public void incassa(int somma){
-        this.soldi += somma;
+    private int ultimoCambioSoldi = 0;
+
+    public int getUltimoCambioSoldi() {
+        return ultimoCambioSoldi;
     }
-    
-    public void paga(int somma, Giocatore beneficiario){
-        if(this.soldi >= somma){
-            this.soldi -= somma;
-            if(beneficiario != null){
-                beneficiario.incassa(somma);
-            }
+
+    public void setUltimoCambioSoldi(int valore) {
+        this.ultimoCambioSoldi = valore;
+    }
+
+    public void incassa(int somma) {
+        this.soldi += somma;
+        this.ultimoCambioSoldi = somma;
+    }
+
+    public void paga(int somma, Giocatore beneficiario) {
+        this.soldi -= somma;
+        this.ultimoCambioSoldi = -somma;
+        if (beneficiario != null) {
+            beneficiario.incassa(somma);
         }
     }
 
     public void muovi(int passi) {
-        // Aggiorna posizione (giro del tabellone)
-        this.posizioneCorrente = (this.posizioneCorrente + passi) % 40;
+        this.posizioneCorrente = Math.floorMod(this.posizioneCorrente + passi, 40);
     }
 
     public void esciDiPrigione() {
@@ -94,17 +102,8 @@ public class Giocatore {
     // Alla terza chiamata prova a pagare 50€ per uscire.
     public void aumentaTurniPrigione() {
         this.turniInPrigione++;
-        if (this.turniInPrigione >= 3) {
-            int tassaUscita = 50;
-            if (this.soldi >= tassaUscita) {
-                this.paga(tassaUscita, null);
-                this.esciDiPrigione();
-                System.out.println(this.nome + " ha pagato " + tassaUscita + "€ ed è uscito di prigione.");
-            } else {
-                // Se non ha abbastanza soldi resta in prigione
-                System.out.println(this.nome + " non ha abbastanza soldi per pagare la cauzione.");
-            }
-        }
+        // Il pagamento dei 500€ ora viene gestito tramite azione manuale nella UI
+        System.out.println(this.nome + " è in prigione da " + this.turniInPrigione + " turni.");
     }
 
     public boolean haSerieCompleta(String colore) {
@@ -119,20 +118,23 @@ public class Giocatore {
             }
         }
 
-        // Marrone e Blu hanno 2 case, gli altri colori ne hanno 3
+        // Marrone e Blu hanno 2 case, gli altri colori ne hanno 3.
+        // NOTA: I colori devono corrispondere a quelli settati in Partita.java
         if ((colore.equals("Marrone") || colore.equals("Blu")) && contatoreColore == 2) {
             return true;
-        } else if((colore.equals("Rosa") || colore.equals("Arancione") || colore.equals("Rosso") || colore.equals("Giallo") || colore.equals("Verde") || colore.equals("Azzurro")) && contatoreColore == 3){
+        } else if ((colore.equals("Magenta") || colore.equals("Arancione") || colore.equals("Rosso")
+                || colore.equals("Giallo") || colore.equals("Verde") || colore.equals("Azzurro"))
+                && contatoreColore == 3) {
             return true;
         } else {
             return false;
         }
     }
 
-    public void acquistaProprieta(Casella proprieta){
-        Casella[] vettore = new Casella[this.proprietaPossedute.length+1];
+    public void acquistaProprieta(Casella proprieta) {
+        Casella[] vettore = new Casella[this.proprietaPossedute.length + 1];
 
-        for(int i=0; i<proprietaPossedute.length; i++){
+        for (int i = 0; i < proprietaPossedute.length; i++) {
             vettore[i] = this.proprietaPossedute[i];
         }
         vettore[this.proprietaPossedute.length] = proprieta;
@@ -142,17 +144,18 @@ public class Giocatore {
 
     public void rimuoviProprieta() {
         for (int i = 0; i < this.proprietaPossedute.length; i++) {
-            
+
             Casella c = this.proprietaPossedute[i];
             if (c instanceof Casella_terreno) {
                 ((Casella_terreno) c).setProprietario(null);
             } else if (c instanceof Casella_stazione) {
                 ((Casella_stazione) c).setProprietario(null);
+            } else if (c instanceof Casella_societa) {
+                ((Casella_societa) c).setProprietario(null);
             }
         }
 
         this.proprietaPossedute = new Casella[0];
     }
-
 
 }

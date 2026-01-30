@@ -3,7 +3,7 @@ package Progetto.src;
 class Casella_speciale extends Casella {
     private int importo;
 
-    public Casella_speciale(String nome, int id, int importo){
+    public Casella_speciale(String nome, int id, int importo) {
         super(nome, id);
         this.importo = importo;
     }
@@ -16,10 +16,12 @@ class Casella_speciale extends Casella {
         this.importo = importo;
     }
 
-    public void azione(Giocatore g, Partita p){
-        g.incassa(importo); // casella "VIA"
+    public void azione(Giocatore g, Partita p) {
+        if (importo > 0) {
+            g.incassa(importo);
+        } else if (importo < 0) {
+            g.paga(Math.abs(importo), null);
+        }
     }
-
-
 
 }
