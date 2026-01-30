@@ -19,6 +19,10 @@ public class Partita {
         return dadiLanciati;
     }
 
+    public void setDadiLanciati(boolean value) {
+        this.dadiLanciati = value;
+    }
+
     public boolean isJustExitedJail() {
         return justExitedJail;
     }
@@ -33,7 +37,7 @@ public class Partita {
     }
 
     public void iniziaPartita() {
-        // Creiamo 4 giocatori 
+        // Creiamo 4 giocatori
         giocatori = new Giocatore[4];
         giocatori[0] = new Giocatore("Giocatore 1", 1500);
         giocatori[1] = new Giocatore("Giocatore 2", 1500);
@@ -111,7 +115,7 @@ public class Partita {
         String colore = "";
         int prezzo = 0;
         int rendita = 0;
-        int costoCasa = 50; 
+        int costoCasa = 50;
 
         switch (i) {
             case 1:
@@ -248,7 +252,7 @@ public class Partita {
                 colore = "Grigio";
                 prezzo = 0;
                 rendita = 0;
-                break; 
+                break;
         }
 
         tabellone.setCasella(i, new Casella_terreno(getOfficialName(i), i, prezzo, rendita, costoCasa, colore));
@@ -327,7 +331,6 @@ public class Partita {
         mazzoProbabilita.aggiungiCarta(new Carta("Andate in prigione!", 3, 0));
         mazzoProbabilita.mescola();
     }
-
 
     private void resetMoneyChanges() {
         for (Giocatore g : giocatori) {
@@ -426,7 +429,6 @@ public class Partita {
         ultimoTipoCarta = null;
     }
 
-
     private void passaTurno() {
         dadiLanciati = false;
         justExitedJail = false;
@@ -447,7 +449,6 @@ public class Partita {
         passaTurno();
     }
 
-    
     public void clearLogs() {
     }
 
