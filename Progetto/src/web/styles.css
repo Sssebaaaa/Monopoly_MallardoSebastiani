@@ -809,3 +809,40 @@ body {
         opacity: 0;
     }
 }
+
+.bg-marrone {
+    background-color: #795548 !important;
+}
+
+.bg-azzurro {
+    background-color: #03a9f4 !important;
+}
+
+.bg-magenta {
+    background-color: #e91e63 !important;
+}
+
+.bg-arancione {
+    background-color: #ff9800 !important;
+}
+
+.bg-rosso {
+    background-color: #f44336 !important;
+}
+
+.bg-giallo {
+    background-color: #ffeb3b !important;
+}
+
+.bg-verde {
+    background-color: #4caf50 !important;
+}
+
+.bg-blu {
+    background-color: #2196f3 !important;
+}
+
+/* Override legacy colors if needed */
+.bg-brown {
+    background-color: #795548;
+}
