@@ -78,3 +78,48 @@ body {
     color: #747d8c;
     margin-bottom: 3rem;
 }
+
+.player-previews {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.player-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.player-preview i {
+    font-size: 3rem;
+    background: transparent;
+    padding: 0.75rem;
+    border-radius: 50%;
+    box-shadow: none;
+    border: 2px solid currentColor;
+}
+
+.menu-btn {
+    background: #2f3542;
+    color: white;
+    border: none;
+    padding: 1rem 3rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.menu-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    background: #57606f;
+}
