@@ -203,3 +203,213 @@ public class AvviaGioco {
 
             return new File(".");
         }
+
+        private String getContentType(String path) {
+            if (path.endsWith(".css")) {
+                return "text/css";
+            }
+            if (path.endsWith(".js")) {
+                return "application/javascript";
+            }
+            if (path.endsWith(".png")) {
+                return "image/png";
+            }
+            if (path.endsWith(".jpg")) {
+                return "image/jpeg";
+            }
+
+            return "text/plain";
+        }
+
+        // converte la query URL in una mappa chiave->valore
+        private Map<String, String> elaboraQuery(String query) {
+            Map<String, String> params = new HashMap<>();
+
+            if (query == null) {
+                return params;
+            }
+
+            String[] coppie = query.split("&");
+
+            for (String coppia : coppie) {
+                String[] keyValue = coppia.split("=");
+
+                String chiave = keyValue[0];
+                String valore = "";
+
+                if (keyValue.length > 1) {
+                    valore = keyValue[1];
+                }
+
+                params.put(chiave, valore);
+            }
+
+            return params;
+        }
+    }
+
+    // SEZIONE: GENERAZIONE HTML
+    // - Funzioni che costruiscono l'intera pagina HTML lato server
+    // - Suddivise in: menu, tabellone, area centrale, sidebar, card di azione
+
+    private static String renderizzaPagina() {
+        StringBuilder html = new StringBuilder();
+
+        html.append("<!DOCTYPE html>");
+        html.append("<html lang='it'>");
+        html.append("<head>");
+        html.append("<meta charset='UTF-8'>");
+        html.append("<title>Monopoly Web</title>");
+        html.append("<link rel='stylesheet' href='styles.css'>");
+        html.append(
+                "<link href='https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap' rel='stylesheet'>");
+        html.append(
+                "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'>");
+        html.append("</head>");
+
+        html.append("<body>");
+        html.append("<div class='app-container'>");
+
+        if (!gameStarted) {
+            String menu = renderizzaMenuPrincipale();
+            html.append(menu);
+        }
+
+        html.append("<div class='game-board-wrapper'>");
+        String tabellone = renderizzaTabellone();
+        html.append(tabellone);
+        html.append("</div>");
+
+        String sidebar = renderizzaBarra();
+        html.append(sidebar);
+
+        html.append("</div>");
+        html.append("</body>");
+        html.append("</html>");
+
+        return html.toString();
+    }
+
+    // Menu principale
+    private static String renderizzaMenuPrincipale() {
+        StringBuilder menu = new StringBuilder();
+
+        menu.append("<div id='main-menu' class='modal-overlay'>");
+        menu.append("<div class='menu-content'>");
+        menu.append("<h1 class='game-title'>MONOPOLY</h1>");
+        menu.append("<p class='subtitle'>di Sebastiani e Mallardo</p>");
+
+        menu.append("<div class='player-previews'>");
+        menu.append(
+                "<div class='player-preview' style='color: #ff4757'><i class='fa-solid fa-car'></i><span>G1</span></div>");
+        menu.append(
+                "<div class='player-preview' style='color: #2ed573'><i class='fa-solid fa-ship'></i><span>G2</span></div>");
+        menu.append(
+                "<div class='player-preview' style='color: #1e90ff'><i class='fa-solid fa-plane'></i><span>G3</span></div>");
+        menu.append(
+                "<div class='player-preview' style='color: #ffa502'><i class='fa-solid fa-dog'></i><span>G4</span></div>");
+        menu.append("</div>");
+
+        menu.append("<div class='menu-actions'>");
+        menu.append(
+                "<a href='/?action=newgame' class='menu-btn primary'><i class='fa-solid fa-play'></i> NUOVA PARTITA</a>");
+        menu.append("</div>");
+
+        menu.append("</div>");
+        menu.append("</div>");
+
+        return menu.toString();
+    }
+
+    // Tabellone di gioco (griglia con 40 caselle)
+    private static String renderizzaTabellone() {
+        StringBuilder board = new StringBuilder();
+
+        board.append("<div id='board' class='board'>");
+
+        // Renderizza tutte le 40 caselle
+        for (int i = 0; i < 40; i++) {
+            String cella = renderizzaCasella(i);
+            board.append(cella);
+        }
+
+        // Area centrale con dadi e pulsanti
+        board.append("<div class='center-area'>");
+        board.append("<div class='brand'>MONOPOLY</div>");
+
+        String areaDadi = renderizzaAreaDadi();
+        board.append(areaDadi);
+
+        String pulsanti = renderizzaPulsantiAzione();
+        board.append(pulsanti);
+
+        String messaggio = renderizzaMessaggioStato();
+        board.append(messaggio);
+
+        board.append("</div>");
+        board.append("</div>");
+
+        return board.toString();
+    }
+
+    // Singola casella - determina nome, colori, icone speciali, case/hotel e
+    // gettoni presenti
+    private static String renderizzaCasella(int indice) {
+        StringBuilder cella = new StringBuilder();
+
+        Casella casellaObj = partita.getTabellone().getCasella(indice);
+        String nome = "";
+        if (casellaObj != null) {
+            nome = casellaObj.getNome();
+        }
+
+        String lato = getCellSide(indice);
+        String classi = "cell " + lato;
+
+        if (èAngolo(indice)) {
+            classi = classi + " corner";
+        }
+        if (èSpeciale(indice)) {
+            classi = classi + " special";
+        }
+
+        String posizione = getCellGrid(indice);
+
+        cella.append("<div class='").append(classi).append("' style='").append(posizione).append("'>");
+
+        // Barra colore della proprietà
+        String colore = getCellColor(indice);
+        if (colore != null && !èAngolo(indice) && !èSpeciale(indice)) {
+            cella.append("<div class='colorbar ").append(colore).append("'></div>");
+        }
+
+        cella.append("<div class='name'>").append(nome).append("</div>");
+
+        // Icona speciale
+        String icona = getSpecialIcon(indice);
+        if (icona != null) {
+            cella.append("<div class='special-icon'>").append(icona).append("</div>");
+        }
+
+        // Mostra case e hotel
+        if (casellaObj instanceof Casella_terreno) {
+            Casella_terreno terreno = (Casella_terreno) casellaObj;
+            int numeroCase = terreno.getNumeroCase();
+            if (numeroCase > 0) {
+                String case_hotel = renderizzaCaseHotel(numeroCase);
+                cella.append(case_hotel);
+            }
+        }
+
+        // Mostra i gettoni dei giocatori
+        if (gameStarted) {
+            String gettoni = renderizzaGettoniSuCasella(indice);
+            cella.append(gettoni);
+        }
+
+        cella.append("</div>");
+
+        return cella.toString();
+    }
+
+    
