@@ -123,3 +123,177 @@ body {
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
     background: #57606f;
 }
+
+.game-board-wrapper {
+    flex: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: white;
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    padding: 20px;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(11, 1fr);
+    grid-template-rows: repeat(11, 1fr);
+    width: 100%;
+    max-width: 900px;
+    aspect-ratio: 1/1;
+    background: var(--board-bg);
+    border: 8px solid var(--board-border);
+    border-radius: 4px;
+    position: relative;
+    user-select: none;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.center-area {
+    grid-column: 2 / 11;
+    grid-row: 2 / 11;
+    background: #fdfdfd;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+.brand {
+    font-size: 5rem;
+    font-weight: 900;
+    color: rgba(0, 0, 0, 0.05);
+    /* Softer brand watermark */
+    transform: rotate(-45deg);
+    position: absolute;
+    z-index: -1;
+}
+
+.cell {
+    border: 1px solid #c0c0c0;
+    display: flex;
+    flex-direction: column;
+    font-size: 0.75rem;
+    text-align: center;
+    position: relative;
+    background: white;
+    /* overflow: visible; Removed to ensure tokens aren't clipped */
+}
+
+.cell.corner {
+    justify-content: center;
+    align-items: center;
+    background: #dfe6e9;
+    font-weight: bold;
+    font-size: 0.8rem;
+    color: #2d3436;
+}
+
+.cell.turn {
+    background: #f7f9fc;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.cell.special {
+    background: #f8f9fa;
+}
+
+.special-icon {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3.5rem;
+    color: rgba(0, 0, 0, 0.05);
+    /* Very faint watermark */
+    z-index: 1;
+    pointer-events: none;
+}
+
+.house-container {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    width: 30px;
+    gap: 2px;
+    z-index: 10;
+}
+
+.house-container i {
+    font-size: 0.6rem;
+    filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.2));
+}
+
+.house-container .hotel-icon {
+    font-size: 1.2rem;
+    position: relative;
+    top: -2px;
+}
+
+/* Orientation Styles */
+.cell.bottom {
+    border-top: 1px solid #aaa;
+}
+
+.cell.left {
+    border-right: 1px solid #aaa;
+}
+
+.cell.top {
+    border-bottom: 1px solid #aaa;
+}
+
+.cell.right {
+    border-left: 1px solid #aaa;
+}
+
+.cell .colorbar {
+    height: 25%;
+    width: 100%;
+    border-bottom: 2px solid #333;
+}
+
+.cell.left .colorbar,
+.cell.right .colorbar {
+    height: 100%;
+    width: 25%;
+    border-bottom: none;
+    position: absolute;
+}
+
+.cell.left .colorbar {
+    right: 0;
+    border-left: 2px solid #333;
+}
+
+.cell.right .colorbar {
+    left: 0;
+    border-right: 2px solid #333;
+}
+
+.cell .name {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    font-weight: 700;
+    z-index: 5;
+    position: relative;
+    word-break: break-word;
+    line-height: 1.1;
+    color: #2d3436;
+}
+
+.cell .price {
+    font-size: 0.7rem;
+    color: #636e72;
+    padding-bottom: 5px;
+    font-weight: 700;
+}
