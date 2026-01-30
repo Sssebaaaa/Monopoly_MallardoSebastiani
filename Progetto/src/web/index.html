@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monopoly</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        
+        <div id="main-menu" class="modal-overlay">
+            <div class="menu-content">
+                <h1 class="game-title">MONOPOLY</h1>
+                
+                <div class="player-previews">
+                    <div class="player-preview" style="color: #ff4757">
+                        <i class="fa-solid fa-car"></i>
+                        <span>Giocatore 1</span>
+                    </div>
+                    <div class="player-preview" style="color: #2ed573">
+                        <i class="fa-solid fa-ship"></i>
+                        <span>Giocatore 2</span>
+                    </div>
+                    <div class="player-preview" style="color: #1e90ff">
+                        <i class="fa-solid fa-plane"></i>
+                        <span>Giocatore 3</span>
+                    </div>
+                    <div class="player-preview" style="color: #ffa502">
+                        <i class="fa-solid fa-dog"></i>
+                        <span>Giocatore 4</span>
+                    </div>
+                </div>
+
+                <div class="menu-actions">
+                    <button id="start-btn" class="menu-btn primary">
+                        <i class="fa-solid fa-play"></i> NUOVA PARTITAA
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-board-wrapper">
+            <div id="board" class="board">
+                
+                <div class="center-area">
+                    <div class="brand">MONOPOLY</div>
+                    
+                    <div class="dice-area">
+                        <div class="scene">
+                            <div class="cube" id="cube-1">
+                                <div class="cube__face cube__face--1">1</div>
+                                <div class="cube__face cube__face--2">2</div>
+                                <div class="cube__face cube__face--3">3</div>
+                                <div class="cube__face cube__face--4">4</div>
+                                <div class="cube__face cube__face--5">5</div>
+                                <div class="cube__face cube__face--6">6</div>
+                            </div>
+                        </div>
+                        <div class="scene">
+                            <div class="cube" id="cube-2">
+                                <div class="cube__face cube__face--1">1</div>
+                                <div class="cube__face cube__face--2">2</div>
+                                <div class="cube__face cube__face--3">3</div>
+                                <div class="cube__face cube__face--4">4</div>
+                                <div class="cube__face cube__face--5">5</div>
+                                <div class="cube__face cube__face--6">6</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button id="roll-btn" class="action-btn" disabled>
+                        <span>LANCIA I DADI</span>
+                    </button>
+
+                    <div class="info-area">
+                        <div id="player-turn" class="status-msg">In attesa...</div>
+                        <div id="log-msg" class="log-msg">Premi START per iniziare</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>CLASSIFICA</h2>
+            </div>
+            <div id="players-list" class="players-list">
+            </div>
+        </div>
+    </div>
+</body>
+</html>
