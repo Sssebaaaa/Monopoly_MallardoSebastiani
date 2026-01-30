@@ -1,4 +1,3 @@
-
 :root {
     --bg-color: #f7f9fc;
     --board-bg: #dbe6ef;
@@ -124,6 +123,7 @@ body {
     background: #57606f;
 }
 
+/* --- BOARD AREA --- */
 .game-board-wrapper {
     flex: 2;
     display: flex;
@@ -215,14 +215,46 @@ body {
 
 .house-container {
     position: absolute;
-    top: 5px;
-    right: 5px;
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-end;
-    width: 30px;
     gap: 2px;
     z-index: 10;
+}
+
+/* Caselle in basso (0-10) - case in riga orizzontale */
+.cell.bottom .house-container {
+    top: 5px;
+    right: 5px;
+    width: 70px;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+/* Caselle a sinistra (10-20) - cases in colonna verticale */
+.cell.left .house-container {
+    top: 5px;
+    right: 5px;
+    width: auto;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+/* Caselle in alto (20-30) - cases in riga orizzontale inversa */
+.cell.top .house-container {
+    bottom: 5px;
+    left: 5px;
+    width: 70px;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+}
+
+/* Caselle a destra (30-40) - cases in colonna verticale inversa */
+.cell.right .house-container {
+    bottom: 5px;
+    left: 5px;
+    width: auto;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
 }
 
 .house-container i {
@@ -298,6 +330,7 @@ body {
     font-weight: 700;
 }
 
+/* --- TOKENS --- */
 .tokens-container {
     position: absolute;
     bottom: 5px;
@@ -447,6 +480,7 @@ body {
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
+/* --- LOGS --- */
 .log-container {
     padding: 1rem;
     background: #f1f2f6;
@@ -456,10 +490,12 @@ body {
     font-size: 0.85rem;
     border: 1px solid #dcdde1;
     margin-top: 0;
+    /* Spacing handled by .log-section */
 }
 
 .log-container::-webkit-scrollbar {
     display: none;
+    /* Hide scrollbar in logs too for cleaner look, or style it thin */
 }
 
 .log-section {
@@ -472,6 +508,7 @@ body {
 /* --- SIDEBAR --- */
 .sidebar {
     width: 350px;
+    /* Fixed width sidebar for better layout stability */
     background: white;
     border-radius: 20px;
     padding: 20px;
@@ -479,6 +516,7 @@ body {
     display: flex;
     flex-direction: column;
     overflow-y: hidden;
+    /* Hide main scrollbar */
     max-height: 95vh;
 }
 
@@ -501,11 +539,14 @@ body {
     flex-direction: column;
     gap: 15px;
     overflow-y: auto;
+    /* Allow scrolling inside content if really needed */
     padding-right: 5px;
+    /* Space for scrollbar if it appears */
 }
 
 .sidebar-content::-webkit-scrollbar {
     width: 0px;
+    /* Hide scrollbar visually but allow scroll */
 }
 
 .players-list {
@@ -810,6 +851,7 @@ body {
     }
 }
 
+/* Property Colors - Italian */
 .bg-marrone {
     background-color: #795548 !important;
 }
@@ -845,4 +887,434 @@ body {
 /* Override legacy colors if needed */
 .bg-brown {
     background-color: #795548;
+}
+
+/* --- CHEAT MENU STYLES --- */
+
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cheat-toggle-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    border: 2px solid transparent;
+    box-shadow: 0 4px 8px rgba(102, 126, 234, 0.2);
+}
+
+.cheat-toggle-btn:hover {
+    transform: scale(1.1) rotate(10deg);
+    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+}
+
+.cheat-toggle-btn-active {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    animation: sparkle 0.6s ease;
+    box-shadow: 0 8px 20px rgba(245, 87, 108, 0.5);
+}
+
+@keyframes sparkle {
+    0% {
+        transform: scale(0.8) rotate(-15deg);
+    }
+    50% {
+        transform: scale(1.15) rotate(5deg);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+.cheat-style {
+    --highlight-color: #f5576c;
+    background: linear-gradient(135deg, rgba(245, 87, 108, 0.05) 0%, rgba(240, 147, 251, 0.05) 100%);
+    border: 2px solid #f5576c;
+    border-radius: 14px;
+}
+
+.cheat-style .card-header {
+    border-bottom: 2px solid rgba(245, 87, 108, 0.2);
+}
+
+.cheat-style .card-header i {
+    animation: float 3s ease-in-out infinite;
+    color: #f5576c;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-4px);
+    }
+}
+
+.cheat-action {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    background: white;
+    border-radius: 10px;
+    border: 1px solid rgba(245, 87, 108, 0.15);
+}
+
+.cheat-label {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #2f3542;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cheat-label i {
+    color: #f5576c;
+}
+
+.cheat-input-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.cheat-input {
+    flex: 1;
+    height: 42px;
+    padding: 0 12px;
+    border: 2px solid #f5576c;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2f3542;
+    transition: all 0.3s;
+    background: white;
+}
+
+.cheat-input:focus {
+    outline: none;
+    border-color: #f093fb;
+    box-shadow: 0 0 0 3px rgba(245, 87, 108, 0.15);
+    transform: scale(1.02);
+}
+
+.cheat-input::placeholder {
+    color: #bdc3c7;
+    font-weight: 500;
+}
+
+.cheat-action-btn {
+    height: 42px;
+    padding: 0 16px;
+    background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(245, 87, 108, 0.3);
+}
+
+.cheat-action-btn:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 6px 20px rgba(245, 87, 108, 0.5);
+}
+
+.cheat-action-btn:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.cheat-money-btn {
+    height: 50px;
+    background: linear-gradient(135deg, #2ed573 0%, #26af5c 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 800;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 16px rgba(46, 213, 115, 0.3);
+    width: 100%;
+}
+
+.cheat-money-btn:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 10px 25px rgba(46, 213, 115, 0.5);
+    background: linear-gradient(135deg, #26af5c 0%, #1e8449 100%);
+}
+
+.cheat-money-btn:active {
+    transform: translateY(-1px) scale(0.98);
+}
+
+.cheat-money-btn i {
+    font-size: 1.3rem;
+    animation: coinSpin 0.6s ease-out;
+}
+
+@keyframes coinSpin {
+    0% {
+        transform: scale(0) rotateY(0);
+    }
+    50% {
+        transform: scale(1.2) rotateY(180deg);
+    }
+    100% {
+        transform: scale(1) rotateY(360deg);
+    }
+}
+
+.cheat-hint {
+    font-size: 0.8rem;
+    color: #a4b0be;
+    font-style: italic;
+    margin: 0;
+}
+
+.cheat-action:nth-child(1) .cheat-hint {
+    color: #a4b0be;
+}
+
+.cheat-action:nth-child(2) .cheat-hint {
+    color: #27ae60;
+}
+
+/* --- CHEAT SYSTEM --- */
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+}
+
+.cheat-toggle-btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #f1f2f6;
+    color: #a4b0be;
+    font-size: 1.1rem;
+    text-decoration: none;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.cheat-toggle-btn:hover {
+    background: #fff3cd;
+    color: #ffa502;
+    border-color: #ffa502;
+    transform: scale(1.05) rotate(10deg);
+}
+
+.cheat-toggle-btn.cheat-btn-active {
+    background: linear-gradient(135deg, #ffa502, #ff6348);
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 165, 2, 0.4);
+    animation: sparkle 0.6s ease;
+}
+
+.cheat-toggle-btn.cheat-btn-active:hover {
+    transform: scale(1.1) rotate(15deg);
+    box-shadow: 0 6px 20px rgba(255, 165, 2, 0.6);
+}
+
+@keyframes sparkle {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.15);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Cheat Card Styling */
+.cheat-style {
+    --highlight-color: #ffa502;
+    border: 2px solid #ffa502;
+    background: linear-gradient(135deg, rgba(255, 165, 2, 0.05), rgba(255, 99, 72, 0.05));
+    box-shadow: 0 6px 20px rgba(255, 165, 2, 0.15);
+    animation: slideInCheat 0.4s ease;
+}
+
+@keyframes slideInCheat {
+    from {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.card-header {
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.cheat-style .card-header {
+    color: #ffa502;
+    border-bottom: 2px solid #ffa502;
+}
+
+.cheat-action {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px;
+    background: white;
+    border-radius: 10px;
+    border: 1px solid #f1f2f6;
+}
+
+.cheat-label {
+    font-weight: 700;
+    color: #2f3542;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.cheat-label i {
+    color: #ffa502;
+    font-size: 1rem;
+}
+
+.cheat-input-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.cheat-input {
+    flex: 1;
+    padding: 10px 12px;
+    border: 2px solid #f1f2f6;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #2f3542;
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+.cheat-input:focus {
+    outline: none;
+    border-color: #ffa502;
+    background: white;
+    box-shadow: 0 0 10px rgba(255, 165, 2, 0.3);
+}
+
+.cheat-input::placeholder {
+    color: #a4b0be;
+}
+
+.cheat-action-btn {
+    padding: 10px 16px;
+    background: linear-gradient(135deg, #ffa502, #ff6348);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    box-shadow: 0 4px 12px rgba(255, 165, 2, 0.3);
+}
+
+.cheat-action-btn:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 6px 16px rgba(255, 165, 2, 0.4);
+}
+
+.cheat-action-btn:active {
+    transform: translateY(0) scale(1);
+}
+
+.cheat-money-btn {
+    width: 100%;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #2ed573, #26af5c);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 800;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    box-shadow: 0 6px 20px rgba(46, 213, 115, 0.3);
+    font-family: 'Outfit', sans-serif;
+}
+
+.cheat-money-btn:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 10px 25px rgba(46, 213, 115, 0.4);
+}
+
+.cheat-money-btn:active {
+    transform: translateY(-1px) scale(1.02);
+}
+
+.cheat-money-btn i {
+    font-size: 1.2rem;
+}
+
+.cheat-hint {
+    font-size: 0.75rem;
+    color: #a4b0be;
+    text-align: center;
+    margin-top: -5px;
+    font-style: italic;
 }
