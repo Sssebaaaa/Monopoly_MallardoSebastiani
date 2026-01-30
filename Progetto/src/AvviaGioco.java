@@ -816,4 +816,277 @@ public class AvviaGioco {
         return card.toString();
     }
 
-    
+    // case e Hotel
+    private static String renderizzaCaseHotel(int numero) {
+        StringBuilder case_hotel = new StringBuilder();
+
+        case_hotel.append("<div class='house-container'>");
+
+        if (numero >= 5) {
+            case_hotel.append("<i class='fa-solid fa-hotel hotel-icon'></i>");
+        } else {
+            for (int i = 0; i < numero; i++) {
+                case_hotel.append("<i class='fa-solid fa-house house-icon'></i>");
+            }
+        }
+
+        case_hotel.append("</div>");
+
+        return case_hotel.toString();
+    }
+
+    // gettoni dei giocatori sulla casella
+    private static String renderizzaGettoniSuCasella(int indice) {
+        StringBuilder gettoni = new StringBuilder();
+
+        gettoni.append("<div class='tokens-container'>");
+
+        Giocatore[] giocatori = partita.getGiocatori();
+
+        for (int j = 0; j < giocatori.length; j++) {
+            Giocatore g = giocatori[j];
+
+            if (g != null && g.getPosizioneCorrente() == indice) {
+                String colore = getPlayerColor(j);
+                String icona = getPlayerIcon(j);
+                int cambioSoldi = g.getUltimoCambioSoldi();
+
+                gettoni.append("<div class='player-token' style='background:").append(colore)
+                        .append("; color:white;'>");
+                gettoni.append(icona);
+
+                if (cambioSoldi != 0) {
+                    String classe = "plus";
+                    String simbolo = "+";
+
+                    if (cambioSoldi < 0) {
+                        classe = "minus";
+                        simbolo = "";
+                    }
+
+                    gettoni.append("<span class='money-indicator ").append(classe).append("'>");
+                    gettoni.append(simbolo).append(cambioSoldi).append(" €");
+                    gettoni.append("</span>");
+                }
+
+                gettoni.append("</div>");
+            }
+        }
+
+        gettoni.append("</div>");
+
+        return gettoni.toString();
+    }
+
+    // contiene funzioni per determinare lati, colore, icone, e controllo caselle
+
+    private static boolean èAngolo(int indice) {
+        if (indice == 0) {
+            return true;
+        }
+        if (indice == 10) {
+            return true;
+        }
+        if (indice == 20) {
+            return true;
+        }
+        if (indice == 30) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private static boolean èSpeciale(int indice) {
+        if (indice == 4)
+            return true;
+        if (indice == 38)
+            return true;
+        if (indice == 2)
+            return true;
+        if (indice == 7)
+            return true;
+        if (indice == 17)
+            return true;
+        if (indice == 33)
+            return true;
+        if (indice == 22)
+            return true;
+        if (indice == 36)
+            return true;
+        if (indice == 5)
+            return true;
+        if (indice == 15)
+            return true;
+        if (indice == 25)
+            return true;
+        if (indice == 35)
+            return true;
+        if (indice == 12)
+            return true;
+        if (indice == 28)
+            return true;
+
+        return false;
+    }
+
+    private static String getCellSide(int indice) {
+        if (indice <= 10) {
+            return "bottom";
+        }
+        if (indice <= 20) {
+            return "left";
+        }
+        if (indice <= 30) {
+            return "top";
+        }
+
+        return "right";
+    }
+
+    private static String getCellGrid(int indice) {
+        int riga = 0;
+        int colonna = 0;
+
+        if (indice <= 10) {
+            riga = 11;
+            colonna = 11 - indice;
+        } else if (indice <= 20) {
+            colonna = 1;
+            riga = 11 - (indice - 10);
+        } else if (indice <= 30) {
+            riga = 1;
+            colonna = (indice - 20) + 1;
+        } else {
+            colonna = 11;
+            riga = (indice - 30) + 1;
+        }
+
+        return "grid-column:" + colonna + "; grid-row:" + riga + ";";
+    }
+
+    private static String getCellColor(int indice) {
+        // marrone
+        if (indice == 1 || indice == 3) {
+            return "bg-marrone";
+        }
+
+        // azzurro
+        if (indice == 6 || indice == 8 || indice == 9) {
+            return "bg-azzurro";
+        }
+
+        // magenta
+        if (indice == 11 || indice == 13 || indice == 14) {
+            return "bg-magenta";
+        }
+
+        // arancione
+        if (indice == 16 || indice == 18 || indice == 19) {
+            return "bg-arancione";
+        }
+
+        // rosso
+        if (indice == 21 || indice == 23 || indice == 24) {
+            return "bg-rosso";
+        }
+
+        // giallo
+        if (indice == 26 || indice == 27 || indice == 29) {
+            return "bg-giallo";
+        }
+
+        // verde
+        if (indice == 31 || indice == 32 || indice == 34) {
+            return "bg-verde";
+        }
+
+        // blu
+        if (indice == 37 || indice == 39) {
+            return "bg-blu";
+        }
+
+        return null;
+    }
+
+    private static String getPlayerColor(int indice) {
+        String[] colori = { "#ff4757", "#2ed573", "#1e90ff", "#ffa502" };
+
+        if (indice >= 0 && indice < colori.length) {
+            return colori[indice];
+        }
+
+        return "#000";
+    }
+
+    private static String getPlayerIcon(int indice) {
+        String[] icone = { "fa-car", "fa-ship", "fa-plane", "fa-dog" };
+
+        if (indice >= 0 && indice < icone.length) {
+            String icona = icone[indice];
+            return "<i class='fa-solid " + icona + "'></i>";
+        }
+
+        return "P";
+    }
+
+    private static String getSpecialIcon(int indice) {
+        // stazioni
+        if (indice == 5 || indice == 15 || indice == 25 || indice == 35) {
+            return "<i class='fa-solid fa-train-subway'></i>";
+        }
+
+        // servizi - elettricità
+        if (indice == 12) {
+            return "<i class='fa-solid fa-bolt'></i>";
+        }
+
+        // servizi - Acqua
+        if (indice == 28) {
+            return "<i class='fa-solid fa-faucet-drip'></i>";
+        }
+
+        // probabilità
+        if (indice == 2 || indice == 17 || indice == 33) {
+            return "<i class='fa-solid fa-question'></i>";
+        }
+
+        // imprevisti
+        if (indice == 7 || indice == 22 || indice == 36) {
+            return "<i class='fa-solid fa-sack-dollar'></i>";
+        }
+
+        // Tassa Patrimoniale
+        if (indice == 4) {
+            return "<i class='fa-solid fa-gem'></i>";
+        }
+
+        // tassa di Lusso
+        if (indice == 38) {
+            return "<i class='fa-solid fa-file-invoice-dollar'></i>";
+        }
+
+        // vai in prigione
+        if (indice == 30) {
+            return "<i class='fa-solid fa-gavel'></i>";
+        }
+
+        // prigione
+        if (indice == 10) {
+            return "<i class='fa-solid fa-bars'></i>";
+        }
+
+        return null;
+    }
+
+    // tenta di aprire la URL della app in default browser
+    private static void apriBrowser(int port) {
+        try {
+            if (Desktop.isDesktopSupported()) {
+                String url = "http://localhost:" + port;
+                Desktop.getDesktop().browse(new URI(url));
+            }
+        } catch (Exception e) {
+        }
+    }
+}
