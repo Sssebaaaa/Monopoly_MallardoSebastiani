@@ -446,3 +446,366 @@ body {
     transform: translateY(-2px) scale(1.05);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
+
+.log-container {
+    padding: 1rem;
+    background: #f1f2f6;
+    border-radius: 12px;
+    height: 150px;
+    overflow-y: auto;
+    font-size: 0.85rem;
+    border: 1px solid #dcdde1;
+    margin-top: 0;
+}
+
+.log-container::-webkit-scrollbar {
+    display: none;
+}
+
+.log-section {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* --- SIDEBAR --- */
+.sidebar {
+    width: 350px;
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    overflow-y: hidden;
+    max-height: 95vh;
+}
+
+.sidebar-header {
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.sidebar h2 {
+    font-size: 1.2rem;
+    color: #2f3542;
+    letter-spacing: 1px;
+    margin: 0;
+}
+
+.sidebar-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.sidebar-content::-webkit-scrollbar {
+    width: 0px;
+}
+
+.players-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.player-card {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: #f8f9fa;
+    border: 1px solid transparent;
+    transition: all 0.3s;
+}
+
+.player-card.active {
+    border-color: var(--highlight-color, #2f3542);
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.player-card.not-turn {
+    opacity: 0.5;
+    transform: scale(0.95);
+}
+
+.player-card.eliminated {
+    opacity: 0.5;
+    filter: grayscale(1);
+    background: #f1f2f6;
+    border-color: #dcdde1;
+    pointer-events: none;
+}
+
+.token-icon {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: none;
+    margin-right: 12px;
+    font-size: 1.2rem;
+}
+
+.p-info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.p-name {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #2f3542;
+}
+
+.p-money {
+    color: #27ae60;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.p-money.negative-money {
+    color: #ff4757 !important;
+    font-weight: 900;
+    animation: pulseDebt 2s infinite;
+}
+
+@keyframes pulseDebt {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Sections in sidebar */
+.section-title {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    color: #a4b0be;
+    font-weight: 700;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+}
+
+/* Standardized Action Card System - True Uniformity */
+.action-card {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #eef0f2;
+    padding: 1.2rem;
+    margin: 0;
+    /* No margins, gap handles spacing */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f8f9fa;
+}
+
+.card-header i {
+    font-size: 1.1rem;
+    color: var(--highlight-color, #2f3542);
+}
+
+.card-title {
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: #2f3542;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.card-subtitle {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #747d8c;
+    margin-top: -2px;
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: #57606f;
+    line-height: 1.5;
+}
+
+/* Standardized Buttons */
+.btn-system {
+    width: 100%;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.btn-primary {
+    background: #2ed573;
+    color: white;
+    box-shadow: 0 4px 12px rgba(46, 213, 115, 0.2);
+}
+
+.btn-primary:hover {
+    background: #26af5c;
+    transform: scale(1.02);
+}
+
+.btn-secondary {
+    background: #f1f2f6;
+    color: #57606f;
+}
+
+.btn-secondary:hover {
+    background: #dfe4ea;
+}
+
+.btn-disabled {
+    background: #f1f2f6;
+    color: #a4b0be;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Specialized Card Variants - Using left accent only */
+.prison-style {
+    --highlight-color: #ff4757;
+}
+
+.purchase-style {
+    --highlight-color: #2ed573;
+}
+
+.info-style {
+    --highlight-color: #747d8c;
+}
+
+.chance-style {
+    --highlight-color: #ff9f43;
+}
+
+.community-style {
+    --highlight-color: #54a0ff;
+}
+
+.card-description {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #2f3542;
+    text-align: center;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    line-height: 1.4;
+}
+
+/* Property Item in Build Card */
+.build-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.build-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.build-name {
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+.build-btn {
+    height: 32px !important;
+    width: auto !important;
+    padding: 0 15px;
+    font-size: 0.8rem;
+}
+
+.house-icon {
+    color: #2ed573 !important;
+}
+
+.hotel-icon {
+    color: #ff4757 !important;
+}
+
+.money-indicator {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-weight: 900;
+    font-size: 1.1rem;
+    white-space: nowrap;
+    pointer-events: none;
+    animation: floatUp 2.5s ease-out forwards;
+    z-index: 100;
+}
+
+.money-indicator.plus {
+    color: #2ecc71;
+}
+
+.money-indicator.minus {
+    color: #e74c3c;
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translate(-50%, 0);
+        opacity: 0;
+    }
+
+    10% {
+        transform: translate(-50%, -10px);
+        opacity: 1;
+    }
+
+    80% {
+        transform: translate(-50%, -40px);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(-50%, -50px);
+        opacity: 0;
+    }
+}
