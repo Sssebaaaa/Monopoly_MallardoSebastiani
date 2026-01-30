@@ -412,4 +412,267 @@ public class AvviaGioco {
         return cella.toString();
     }
 
+    // Area centrale - dadi
+    private static String renderizzaAreaDadi() {
+        StringBuilder dadi = new StringBuilder();
+
+        int dado1 = partita.getDadi().getValore1();
+        if (dado1 < 1) {
+            dado1 = 1;
+        }
+
+        int dado2 = partita.getDadi().getValore2();
+        if (dado2 < 1) {
+            dado2 = 1;
+        }
+
+        String facce = "<div class='cube__face cube__face--1'>1</div>";
+        facce = facce + "<div class='cube__face cube__face--2'>2</div>";
+        facce = facce + "<div class='cube__face cube__face--3'>3</div>";
+        facce = facce + "<div class='cube__face cube__face--4'>4</div>";
+        facce = facce + "<div class='cube__face cube__face--5'>5</div>";
+        facce = facce + "<div class='cube__face cube__face--6'>6</div>";
+
+        dadi.append("<div class='dice-area'>");
+        dadi.append("<div class='scene'><div class='cube show-").append(dado1).append("'>").append(facce)
+                .append("</div></div>");
+        dadi.append("<div class='scene'><div class='cube show-").append(dado2).append("'>").append(facce)
+                .append("</div></div>");
+        dadi.append("</div>");
+
+        return dadi.toString();
+    }
+
+    // Pulsanti di azione (lancia, fine turno)
+    private static String renderizzaPulsantiAzione() {
+        StringBuilder pulsanti = new StringBuilder();
+
+        if (!gameStarted) {
+            pulsanti.append("<button class='action-btn' disabled>LANCIA DADI</button>");
+            return pulsanti.toString();
+        }
+
+        boolean dadiLanciati = partita.isDadiLanciati();
+
+        if (!dadiLanciati) {
+            boolean isDoppio = partita.getDadi().isDoppio();
+            Giocatore giocatoreCorrente = partita.getGiocatoreCorrente();
+            boolean inPrigione = giocatoreCorrente.isInPrigione();
+
+            String testo = "LANCIA DADI";
+            if (isDoppio && !inPrigione) {
+                testo = "DOPPIO! RITIRA";
+            }
+
+            pulsanti.append("<a href='/?action=roll' class='action-btn'>").append(testo).append("</a>");
+        } else {
+            pulsanti.append("<a href='/?action=endTurn' class='action-btn secondary'>");
+            pulsanti.append("<i class='fa-solid fa-check'></i> FINE TURNO");
+            pulsanti.append("</a>");
+        }
+
+        return pulsanti.toString();
+    }
+
+    // Messaggi
+    private static String renderizzaMessaggioStato() {
+        StringBuilder messaggio = new StringBuilder();
+
+        String testo = "";
+        if (gameStarted) {
+            int indiceGiocatore = partita.getIndiceGiocatoreCorrente();
+            String coloreGiocatore = getPlayerColor(indiceGiocatore);
+            Giocatore g = partita.getGiocatoreCorrente();
+            String nomeGiocatore = g.getNome();
+
+            testo = "Turno di <span style='color:" + coloreGiocatore + "'>" + nomeGiocatore + "</span>";
+        } else {
+            testo = "In attesa...";
+        }
+
+        messaggio.append("<div class='info-area'>");
+        messaggio.append("<div class='status-msg'>").append(testo).append("</div>");
+        messaggio.append("</div>");
+
+        return messaggio.toString();
+    }
+
+    // Sidebar
+    private static String renderizzaBarra() {
+        StringBuilder sidebar = new StringBuilder();
+
+        sidebar.append("<div class='sidebar'>");
+
+        sidebar.append("<div class='sidebar-header'>");
+        sidebar.append("<h2>MONOPOLY</h2>");
+        String cheatButtonStyle = cheat.isCheatsAvailable() ? "cheat-btn-active" : "";
+        sidebar.append("<a href='/?action=toggle_cheat' class='cheat-toggle-btn ").append(cheatButtonStyle).append("'>");
+        sidebar.append("<i class='fa-solid fa-wand-magic-sparkles'></i>");
+        sidebar.append("</a>");
+        sidebar.append("</div>");
+
+        sidebar.append("<div class='sidebar-content'>");
+
+        String statsGiocatori = renderizzaStatisticheGiocatori();
+        sidebar.append(statsGiocatori);
+
+        if (gameStarted) {
+            String cheatCard = renderizzaCardCheat();
+            sidebar.append(cheatCard);
+
+            String azioni = renderizzaAzioniContextoCorrente();
+            sidebar.append(azioni);
+        }
+
+        sidebar.append("</div>");
+        sidebar.append("</div>");
+
+        return sidebar.toString();
+    }
+
+    // CARD: Cheat Menu
+    private static String renderizzaCardCheat() {
+        StringBuilder card = new StringBuilder();
+
+        if (!cheat.isCheatsAvailable()) {
+            return "";
+        }
+
+        card.append("<div class='action-card cheat-style'>");
+        card.append("<div class='card-header'>");
+        card.append("<i class='fa-solid fa-wand-magic-sparkles'></i> CHEAT MENU");
+        card.append("</div>");
+        card.append("<div class='card-body'>");
+
+        // Sezione "Vai alla Casella"
+        card.append("<div class='cheat-action'>");
+        card.append("<label for='casella-input' class='cheat-label'>");
+        card.append("<i class='fa-solid fa-location-arrow'></i> Vai alla Casella");
+        card.append("</label>");
+        card.append("<div class='cheat-input-group'>");
+        card.append("<input type='number' id='casella-input' min='0' max='39' placeholder='0-39' class='cheat-input'>");
+        card.append("<a href='javascript:void(0)' onclick=\"document.location='/?action=cheat_vaiallacasella&casella=' + document.getElementById('casella-input').value\" class='cheat-action-btn'>");
+        card.append("<i class='fa-solid fa-arrow-right'></i> VAI");
+        card.append("</a>");
+
+        // Sezione "+200 Euro"
+        card.append("<div class='cheat-action'>");
+        card.append("<a href='/?action=cheat_bonus200' class='cheat-money-btn'>");
+        card.append("<i class='fa-solid fa-coins'></i> +200€ BONUS");
+        card.append("</a>");
+        card.append("<p class='cheat-hint'>Guadagna 200€ istantaneamente</p>");
+        card.append("</div>");
+
+        card.append("</div>");
+        card.append("</div>");
+
+        return card.toString();
+    }
+
+    // CARD: statistiche giocatori (soldi, icone, stato) ---
+    private static String renderizzaStatisticheGiocatori() {
+        StringBuilder stats = new StringBuilder();
+
+        stats.append("<div class='action-card info-style'>");
+        stats.append("<div class='card-header'>");
+        stats.append("<i class='fa-solid fa-users'></i> Giocatori");
+        stats.append("</div>");
+        stats.append("<div class='card-body'>");
+
+        if (gameStarted) {
+            Giocatore[] giocatori = partita.getGiocatori();
+            int indiceCorrente = partita.getIndiceGiocatoreCorrente();
+
+            for (int i = 0; i < giocatori.length; i++) {
+                Giocatore g = giocatori[i];
+
+                if (g == null) {
+                    continue;
+                }
+
+                String classeStatus = "not-turn";
+                if (i == indiceCorrente) {
+                    classeStatus = "active";
+                }
+                if (g.getSoldi() < 0) {
+                    classeStatus = "eliminated";
+                }
+
+                String coloreGiocatore = getPlayerColor(i);
+                String iconaGiocatore = getPlayerIcon(i);
+                String nomeGiocatore = g.getNome();
+                int soldiGiocatore = g.getSoldi();
+                boolean inPrigione = g.isInPrigione();
+
+                stats.append("<div class='player-card ").append(classeStatus).append("' style='--highlight-color:")
+                        .append(coloreGiocatore).append("'>");
+
+                stats.append("<div class='token-icon' style='color:").append(coloreGiocatore).append("'>");
+                stats.append(iconaGiocatore);
+                stats.append("</div>");
+
+                stats.append("<div class='p-info'>");
+                stats.append("<span class='p-name'>").append(nomeGiocatore);
+
+                if (inPrigione) {
+                    stats.append(" <i class='fa-solid fa-lock' style='color:#ff4757'></i>");
+                }
+
+                stats.append("</span>");
+                stats.append("<span class='p-money'>€ ").append(soldiGiocatore).append("</span>");
+                stats.append("</div>");
+
+                stats.append("</div>");
+            }
+        }
+
+        stats.append("</div>");
+        stats.append("</div>");
+
+        return stats.toString();
+    }
+
+    // CARD: azioni basate sulla casella corrente
+    private static String renderizzaAzioniContextoCorrente() {
+        StringBuilder azioni = new StringBuilder();
+
+        Giocatore giocatoreCorrente = partita.getGiocatoreCorrente();
+        int posizioneCorrente = giocatoreCorrente.getPosizioneCorrente();
+        Casella casellaCorrente = partita.getTabellone().getCasella(posizioneCorrente);
+
+        // sezione Prigione
+        if (giocatoreCorrente.isInPrigione()) {
+            azioni.append("<div class='action-card prison-style'>");
+            azioni.append("<div class='card-header'>");
+            azioni.append("<i class='fa-solid fa-lock'></i> Prigione ");
+            azioni.append("</div>");
+
+            azioni.append("<div class='card-body'>");
+            azioni.append("<p><b>").append(giocatoreCorrente.getNome()).append("</b> è in arresto.</p>");
+
+            boolean dadiNonLanciati = !partita.isDadiLanciati();
+            int soldiGiocatore = giocatoreCorrente.getSoldi();
+
+            if (dadiNonLanciati && soldiGiocatore >= 500) {
+                azioni.append("<a href='/?action=payJail' class='btn-system btn-primary' style='background:#ff4757;'>");
+                azioni.append("ESCI (500€)");
+                azioni.append("</a>");
+            }
+
+            azioni.append("</div>");
+            azioni.append("</div>");
+        }
+
+        // sezione Acquisto/Costruzione
+        if (partita.isDadiLanciati()) {
+            String acquisto = renderizzaCardAcquistoOCostruzione(giocatoreCorrente, casellaCorrente);
+            azioni.append(acquisto);
+
+            String info = renderizzaCardVisita(giocatoreCorrente, casellaCorrente);
+            azioni.append(info);
+        }
+
+        return azioni.toString();
+    }
+
     
