@@ -675,4 +675,145 @@ public class AvviaGioco {
         return azioni.toString();
     }
 
+    // CARD: acquisto / costruzione (ostra opzioni di acquisto o aggiunta casa se
+    // applicabile)
+    private static String renderizzaCardAcquistoOCostruzione(Giocatore giocatore, Casella casella) {
+        StringBuilder card = new StringBuilder();
+        // Controlla lo stato di proprietà e il prezzo (se applicabile)
+        int prezzo = -1;
+        Giocatore proprietario = null;
+
+        if (casella instanceof Casella_terreno) {
+            Casella_terreno terreno = (Casella_terreno) casella;
+            prezzo = terreno.getValoreAcquisto();
+            proprietario = terreno.getProprietario();
+        } else if (casella instanceof Casella_stazione) {
+            Casella_stazione stazione = (Casella_stazione) casella;
+            prezzo = stazione.getValoreAcquisto();
+            proprietario = stazione.getProprietario();
+        } else if (casella instanceof Casella_societa) {
+            Casella_societa societa = (Casella_societa) casella;
+            prezzo = societa.getValoreAcquisto();
+            proprietario = societa.getProprietario();
+        }
+
+        // Mostra la card di acquisto solo per tipi acquistabili
+        if (prezzo > 0) {
+            // Se non ha proprietario: mostra pulsante COMPRA
+            if (proprietario == null) {
+                card.append("<div class='action-card purchase-style'>");
+                card.append("<div class='card-header'>");
+                card.append("<i class='fa-solid fa-cart-shopping'></i> ACQUISTO");
+                card.append("</div>");
+
+                card.append("<div class='card-body'>");
+                card.append("<span class='card-subtitle'>").append(casella.getNome()).append("</span>");
+                card.append("<p>Prezzo: <b>").append(prezzo).append("€</b></p>");
+
+                int soldiGiocatore = giocatore.getSoldi();
+                if (soldiGiocatore >= prezzo) {
+                    card.append("<a href='/?action=buy' class='btn-system btn-primary'>COMPRA ORA</a>");
+                } else {
+                    card.append("<div class='btn-system btn-disabled'>FONDI INSUFFICIENTI</div>");
+                }
+
+                card.append("</div>");
+                card.append("</div>");
+            }
+            // Se il proprietario è il giocatore corrente: mostra la card ma con messaggio
+            // "Proprietà già posseduta"
+            else if (proprietario == giocatore) {
+                card.append("<div class='action-card purchase-style'>");
+                card.append("<div class='card-header'>");
+                card.append("<i class='fa-solid fa-cart-shopping'></i> ACQUISTO");
+                card.append("</div>");
+
+                card.append("<div class='card-body'>");
+                card.append("<span class='card-subtitle'>").append(casella.getNome()).append("</span>");
+                card.append("<p>Prezzo: <b>").append(prezzo).append("€</b></p>");
+
+                card.append("<div class='btn-system btn-disabled'>Proprietà già posseduta</div>");
+
+                card.append("</div>");
+                card.append("</div>");
+            }
+            // Altrimenti (proprietario diverso): non mostrare la card di acquisto
+        }
+
+        // mostra la card di costruzione
+        if (casella instanceof Casella_terreno) {
+            Casella_terreno terreno = (Casella_terreno) casella;
+            proprietario = terreno.getProprietario();
+            String colore = terreno.getColore();
+            int numeroCase = terreno.getNumeroCase();
+
+            boolean appartienealGiocatore = (proprietario == giocatore);
+            boolean serieCompleta = giocatore.haSerieCompleta(colore);
+            boolean puoConstruire = (numeroCase < 5);
+
+            if (appartienealGiocatore && serieCompleta && puoConstruire) {
+                int costoCasa = terreno.getCostoCasa();
+                int soldiGiocatore = giocatore.getSoldi();
+
+                card.append("<div class='action-card'>");
+                card.append("<div class='card-header'>");
+                card.append("<i class='fa-solid fa-hammer'></i> COSTRUISCI");
+                card.append("</div>");
+
+                card.append("<div class='card-body'>");
+                card.append("<span class='card-subtitle'>").append(terreno.getNome()).append("</span>");
+                card.append("<p>Costo Casa: <b>").append(costoCasa).append("€</b></p>");
+
+                if (soldiGiocatore >= costoCasa) {
+                    card.append("<a href='/?action=build' class='btn-system btn-primary'>AGGIUNGI CASA</a>");
+                }
+
+                card.append("</div>");
+                card.append("</div>");
+            }
+        }
+
+        return card.toString();
+    }
+
+    // CARD: info casella
+    private static String renderizzaCardVisita(Giocatore giocatore, Casella casella) {
+        StringBuilder card = new StringBuilder();
+
+        card.append("<div class='action-card info-style'>");
+        card.append("<div class='card-header'>");
+        card.append("<i class='fa-solid fa-location-dot'></i> Info Casella");
+        card.append("</div>");
+
+        card.append("<div class='card-body'>");
+        card.append("<span class='card-subtitle'>").append(casella.getNome()).append("</span>");
+
+        // Se è una casella carta, mostra la descrizione
+        if (casella instanceof Casella_carta) {
+            Carta cartaPescata = partita.getUltimaCartaPescata();
+            if (cartaPescata != null) {
+                String descrizione = cartaPescata.getDescrizione();
+                card.append("<p class='card-description'>\"").append(descrizione).append("\"</p>");
+            }
+        }
+        // Se è un terreno con proprietario, mostra proprietario e affitto
+        else if (casella instanceof Casella_terreno) {
+            Casella_terreno terreno = (Casella_terreno) casella;
+            Giocatore proprietario = terreno.getProprietario();
+
+            if (proprietario != null && proprietario != giocatore) {
+                String nomeProprietario = proprietario.getNome();
+                int affitto = terreno.calcolaAffitto();
+
+                card.append("<p>Proprietario: ").append(nomeProprietario).append("</p>");
+                card.append("<p>Affitto: <b>").append(affitto).append("€</b></p>");
+            }
+        }
+
+        card.append("</div>");
+        card.append("</div>");
+
+        return card.toString();
+    }
+
     
