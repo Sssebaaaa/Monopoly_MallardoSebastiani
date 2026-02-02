@@ -22,7 +22,7 @@ body {
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    /* Prevent body scroll */
+    /* Previene lo scorrimento del corpo */
 }
 
 .app-container {
@@ -34,7 +34,7 @@ body {
     padding: 1rem;
 }
 
-/* --- MAIN MENU --- */
+/* --- MENU PRINCIPALE --- */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -124,7 +124,7 @@ body {
     background: #57606f;
 }
 
-/* --- BOARD AREA --- */
+/* --- AREA DEL TABELLONE --- */
 .game-board-wrapper {
     flex: 2;
     display: flex;
@@ -167,7 +167,7 @@ body {
     font-size: 5rem;
     font-weight: 900;
     color: rgba(0, 0, 0, 0.05);
-    /* Softer brand watermark */
+    /* Filigrana del marchio più sfumata */
     transform: rotate(-45deg);
     position: absolute;
     z-index: -1;
@@ -209,7 +209,7 @@ body {
     transform: translate(-50%, -50%);
     font-size: 3.5rem;
     color: rgba(0, 0, 0, 0.05);
-    /* Very faint watermark */
+    /* Filigrana molto tenue */
     z-index: 1;
     pointer-events: none;
 }
@@ -269,7 +269,7 @@ body {
     top: -2px;
 }
 
-/* Orientation Styles */
+/* Stili di orientamento */
 .cell.bottom {
     border-top: 1px solid #aaa;
 }
@@ -331,7 +331,7 @@ body {
     font-weight: 700;
 }
 
-/* --- TOKENS --- */
+/* --- GETTONI --- */
 .tokens-container {
     position: absolute;
     bottom: 5px;
@@ -360,7 +360,7 @@ body {
 }
 
 
-/* --- DICE 3D --- */
+/* --- DADI 3D --- */
 .dice-area {
     display: flex;
     gap: 40px;
@@ -421,7 +421,7 @@ body {
     transform: rotateX(-90deg) translateZ(30px);
 }
 
-/* Dice Animations classes */
+/* Classi per animazioni dei dadi */
 .cube.show-1 {
     transform: translateZ(-30px) rotateY(0deg);
 }
@@ -446,7 +446,7 @@ body {
     transform: translateZ(-30px) rotateX(90deg);
 }
 
-/* --- CONTROLS --- */
+/* --- COMANDI --- */
 .action-btn {
     background: linear-gradient(135deg, #ff6b6b, #ee5253);
     color: white;
@@ -481,7 +481,7 @@ body {
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* --- LOGS --- */
+/* --- REGISTRI --- */
 .log-container {
     padding: 1rem;
     background: #f1f2f6;
@@ -496,7 +496,7 @@ body {
 
 .log-container::-webkit-scrollbar {
     display: none;
-    /* Hide scrollbar in logs too for cleaner look, or style it thin */
+    /* Nasconde la barra di scorrimento anche nei log per un aspetto più pulito, o lo rende più sottile */
 }
 
 .log-section {
@@ -506,10 +506,10 @@ body {
     gap: 0.5rem;
 }
 
-/* --- SIDEBAR --- */
+/* --- BARRA LATERALE --- */
 .sidebar {
     width: 350px;
-    /* Fixed width sidebar for better layout stability */
+    /* Barra laterale a larghezza fissa per una migliore stabilità del layout */
     background: white;
     border-radius: 20px;
     padding: 20px;
@@ -517,7 +517,7 @@ body {
     display: flex;
     flex-direction: column;
     overflow-y: hidden;
-    /* Hide main scrollbar */
+    /* Nasconde la barra di scorrimento principale */
     max-height: 95vh;
 }
 
@@ -542,7 +542,7 @@ body {
     overflow-y: auto;
     /* Allow scrolling inside content if really needed */
     padding-right: 5px;
-    /* Space for scrollbar if it appears */
+    /* Spazio per la barra di scorrimento se appare */
 }
 
 .sidebar-content::-webkit-scrollbar {
@@ -634,7 +634,7 @@ body {
     }
 }
 
-/* Sections in sidebar */
+/* Sezioni nella barra laterale */
 .section-title {
     font-size: 0.9rem;
     text-transform: uppercase;
@@ -646,7 +646,7 @@ body {
     padding-bottom: 5px;
 }
 
-/* Standardized Action Card System - True Uniformity */
+/* Sistema standardizzato di schede d'azione - Totale uniformità */
 .action-card {
     background: white;
     border-radius: 12px;
@@ -697,7 +697,7 @@ body {
     line-height: 1.5;
 }
 
-/* Standardized Buttons */
+/* Pulsanti standardizzati */
 .btn-system {
     width: 100%;
     height: 48px;
@@ -742,7 +742,7 @@ body {
     pointer-events: none;
 }
 
-/* Specialized Card Variants - Using left accent only */
+/* Varianti di schede specializzate - Utilizzo solo accento sinistro */
 .prison-style {
     --highlight-color: #ff4757;
 }
@@ -852,7 +852,7 @@ body {
     }
 }
 
-/* Property Colors - Italian */
+/* Colori delle proprietà - Italiano */
 .bg-marrone {
     background-color: #795548 !important;
 }
@@ -885,12 +885,12 @@ body {
     background-color: #2196f3 !important;
 }
 
-/* Override legacy colors if needed */
+/* Sovrascrive i colori precedenti se necessario */
 .bg-brown {
     background-color: #795548;
 }
 
-/* --- CHEAT SYSTEM --- */
+/* --- SISTEMA DEI TRUCCHI --- */
 .sidebar-header {
     display: flex;
     align-items: center;
@@ -950,7 +950,7 @@ body {
     }
 }
 
-/* Cheat Card Styling */
+/* Stile della scheda dei trucchi */
 .cheat-style {
     --highlight-color: #c71bc2;
     border: 2px solid #f115ff;
@@ -1118,7 +1118,7 @@ body {
     filter: brightness(0.9);
 }
 
-/* --- VICTORY SCREEN --- */
+/* --- SCHERMATA DI VITTORIA --- */
 .modal-overlay.victory {
     background: rgba(15, 23, 42, 0.95);
     backdrop-filter: blur(20px);

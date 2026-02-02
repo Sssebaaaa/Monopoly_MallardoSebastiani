@@ -28,7 +28,7 @@ public class Partita {
         this.dadiLanciati = value;
     }
 
-    public boolean isJustExitedJail() {
+    public boolean appenaUscito() {
         return justExitedJail;
     }
 
@@ -52,16 +52,16 @@ public class Partita {
         giocatoriAttivi = 4;
         turnoCorrente = 0;
         vincitore = null;
-        log("Partita iniziata! Tocca al " + getGiocatoreCorrente().getNome());
+        registra("Partita iniziata! Tocca al " + getGiocatoreCorrente().getNome());
 
         // Setup Tabellone
-        setupTabellone();
+        preparaTabellone();
 
         // Setup Mazzi
-        setupMazzi();
+        preparaMazzi();
     }
 
-    private void setupTabellone() {
+    private void preparaTabellone() {
         for (int i = 0; i < tabellone.getDimensione(); i++) {
             switch (i) {
                 case 0:
@@ -102,7 +102,7 @@ public class Partita {
                     tabellone.setCasella(i, new Casella_societa("Società Acqua Potabile", i, 150));
                     break;
                 default:
-                    setupTerreno(i);
+                    configuraCella(i);
                     break;
             }
         }
@@ -117,7 +117,7 @@ public class Partita {
         }
     }
 
-    private void setupTerreno(int i) {
+    private void configuraCella(int i) {
         String colore = "";
         int prezzo = 0;
         int rendita = 0;
@@ -261,10 +261,10 @@ public class Partita {
                 break;
         }
 
-        tabellone.setCasella(i, new Casella_terreno(getOfficialName(i), i, prezzo, rendita, costoCasa, colore));
+        tabellone.setCasella(i, new Casella_terreno(nomeUfficiale(i), i, prezzo, rendita, costoCasa, colore));
     }
 
-    private String getOfficialName(int i) {
+    private String nomeUfficiale(int i) {
         switch (i) {
             case 1:
                 return "Vicolo Corto";
@@ -315,7 +315,7 @@ public class Partita {
         }
     }
 
-    private void setupMazzi() {
+    private void preparaMazzi() {
         mazzoImprevisti = new Mazzo();
         mazzoImprevisti.aggiungiCarta(new Carta("Andate fino al VIA", 4, 0));
         mazzoImprevisti.aggiungiCarta(new Carta("Andate in Prigione senza passare dal VIA", 3, 0));
@@ -338,7 +338,7 @@ public class Partita {
         mazzoProbabilita.mescola();
     }
 
-    public void resetMoneyChanges() {
+    public void azzeraVariazioni() {
         if (giocatori == null) {
             return;
         }
@@ -353,13 +353,13 @@ public class Partita {
         if (g != null && g.isInPrigione() && g.getSoldi() >= 500) {
             g.paga(500, null);
             g.esciDiPrigione();
-            log(g.getNome() + " ha pagato 500€ ed è uscito di prigione.");
+            registra(g.getNome() + " ha pagato 500€ ed è uscito di prigione.");
             justExitedJail = true;
         }
     }
 
     public void eseguiTurnoCorrente() {
-        resetMoneyChanges();
+        azzeraVariazioni();
         ultimaCartaPescata = null;
         ultimoTipoCarta = null;
         justExitedJail = false;
@@ -371,7 +371,7 @@ public class Partita {
         }
 
         if (dadiLanciati) {
-            log("Attenzione: dadi già lanciati per questo turno!");
+            registra("Attenzione: dadi già lanciati per questo turno!");
             return;
         }
 
@@ -382,15 +382,15 @@ public class Partita {
             v1 = dadi.getValore1();
             v2 = dadi.getValore2();
             passi = v1 + v2;
-            log("Lancio dadi per uscire di prigione: " + v1 + ", " + v2);
+            registra("Lancio dadi per uscire di prigione: " + v1 + ", " + v2);
             // Richiesto "doppio 6" per uscire gratis
             if (v1 == 6 && v2 == 6) {
                 g.esciDiPrigione();
                 justExitedJail = true;
-                log("Doppio 6! Sei uscito di prigione gratis.");
+                registra("Doppio 6! Sei uscito di prigione gratis.");
             } else {
                 g.aumentaTurniPrigione();
-                log("Niente doppio 6, resti in prigione.");
+                registra("Niente doppio 6, resti in prigione.");
                 dadiLanciati = true; // Segnamo comunque lanciati per sicurezza
                 return;
             }
@@ -402,7 +402,7 @@ public class Partita {
         }
 
         dadiLanciati = true;
-        log("Hai lanciato: " + v1 + " + " + v2 + " = " + passi);
+        registra("Hai lanciato: " + v1 + " + " + v2 + " = " + passi);
 
         int posizioneAttuale = g.getPosizioneCorrente();
         int nuovaPosizione = tabellone.calcolaProssimaPosizione(posizioneAttuale, passi);
@@ -412,23 +412,23 @@ public class Partita {
         // Verifica passaggio dal VIA
         if (passi > 0 && nuovaPosizione < posizioneAttuale) {
             g.incassa(200);
-            log(g.getNome() + " ha passato il VIA! Ritira 200€");
+            registra(g.getNome() + " ha passato il VIA! Ritira 200€");
         }
 
         Casella casellaArrivo = tabellone.getCasella(nuovaPosizione);
         if (casellaArrivo != null) {
-            log("Sei atterrato su: " + casellaArrivo.getNome());
+            registra("Sei atterrato su: " + casellaArrivo.getNome());
             casellaArrivo.azione(g, this);
         }
 
         if (g.getSoldi() < 0) {
-            log("GIOCATORE FALLITO! " + g.getNome() + " esce dal gioco.");
+            registra("GIOCATORE FALLITO! " + g.getNome() + " esce dal gioco.");
             rimuoviGiocatore(turnoCorrente);
         }
     }
 
     public void terminaTurno() {
-        resetMoneyChanges();
+        azzeraVariazioni();
         if (!dadi.isDoppio() || getGiocatoreCorrente().isInPrigione()) {
             passaTurno();
         }
@@ -450,6 +450,8 @@ public class Partita {
 
     public void rimuoviGiocatore(int indice) {
         Giocatore g = giocatori[indice];
+        boolean eraTurnoDiQuestoGiocatore = (indice == turnoCorrente);
+        
         if (g != null) {
             g.rimuoviProprieta();
         }
@@ -457,24 +459,24 @@ public class Partita {
         giocatoriAttivi--;
 
         // Controlla se c'è un vincitore
-        if (giocatoriAttivi == 1) {
+        if (giocatoriAttivi <= 1) {
             for (int i = 0; i < giocatori.length; i++) {
                 if (giocatori[i] != null) {
                     vincitore = giocatori[i];
                     turnoCorrente = i; // Imposta il turno sul vincitore per evitare null pointer
-                    log("ABBIAMO UN VINCITORE! " + vincitore.getNome() + " ha vinto la partita!");
+                    registra("ABBIAMO UN VINCITORE! " + vincitore.getNome() + " ha vinto la partita!");
                     break;
                 }
             }
-        } else {
+        } else if (eraTurnoDiQuestoGiocatore) {
             passaTurno();
         }
     }
 
-    public void clearLogs() {
+    public void svuotaLog() {
     }
 
-    public void log(String msg) {
+    public void registra(String msg) {
         System.out.println(msg);
     }
 
@@ -546,7 +548,7 @@ public class Partita {
             return;
 
         banca.vendiTerreno(cell, g);
-        log(g.getNome() + " ha acquistato " + cell.getNome());
+        registra(g.getNome() + " ha acquistato " + cell.getNome());
     }
 
     public void costruisciCasaCellaCorrente() {
@@ -564,13 +566,13 @@ public class Partita {
 
         int costoCasa = terreno.getCostoCasa();
         if (g.getSoldi() < costoCasa) {
-            log(g.getNome() + " non ha abbastanza soldi per costruire");
+            registra(g.getNome() + " non ha abbastanza soldi per costruire");
             return;
         }
 
         if (terreno.costruisciCasa()) {
             g.paga(costoCasa, null);
-            log(g.getNome() + " ha costruito una casa su " + cell.getNome());
+            registra(g.getNome() + " ha costruito una casa su " + cell.getNome());
         }
     }
 }

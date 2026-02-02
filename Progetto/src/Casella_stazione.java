@@ -40,7 +40,7 @@ class Casella_stazione extends Casella {
         if (this.proprietario != null && this.proprietario != g) {
             g.paga(calcolaAffitto(), proprietario);
         } else if (this.proprietario == null) {
-            p.log(nome + " è in vendita per " + valoreAcquisto + "€");
+            p.registra(nome + " è in vendita per " + valoreAcquisto + "€");
         }
     }
 

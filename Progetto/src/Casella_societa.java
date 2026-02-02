@@ -27,9 +27,9 @@ public class Casella_societa extends Casella {
         if (proprietario != null && proprietario != g) {
             int pedaggio = calcolaAffitto(p.getDadi().getTotale());
             g.paga(pedaggio, proprietario);
-            p.log(g.getNome() + " ha pagato " + pedaggio + "€ di pedaggio a " + proprietario.getNome());
+            p.registra(g.getNome() + " ha pagato " + pedaggio + "€ di pedaggio a " + proprietario.getNome());
         } else if (proprietario == null) {
-            p.log(nome + " è in vendita per " + valoreAcquisto + "€");
+            p.registra(nome + " è in vendita per " + valoreAcquisto + "€");
         }
     }
 

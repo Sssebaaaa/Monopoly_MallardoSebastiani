@@ -51,7 +51,7 @@ class Carta {
                 g.muovi(valore);
                 if (g.getPosizioneCorrente() < oldP2 && valore > 0) {
                     g.incassa(200);
-                    p.log(g.getNome() + " ha passato il VIA tramite una carta! Ritira 200€");
+                    p.registra(g.getNome() + " ha passato il VIA tramite una carta! Ritira 200€");
                 }
                 // Attiva l'azione della casella di arrivo (solo se non è un'altra carta per
                 // evitare loop infiniti)
@@ -74,7 +74,7 @@ class Carta {
                 // 0.
                 // In entrambi i casi ha "passato" o "raggiunto" il via.
                 g.incassa(200);
-                p.log(g.getNome() + " va al VIA! Ritira 200€");
+                p.registra(g.getNome() + " va al VIA! Ritira 200€");
                 // Il VIA di solito non ha azione (o ha azione 0 già settata), ma per coerenza:
                 Casella dest4 = p.getTabellone().getCasella(0);
                 if (dest4 != null)
@@ -85,12 +85,12 @@ class Carta {
                 int target = valore;
                 int currentPos = g.getPosizioneCorrente();
                 g.setPosizioneCorrente(target);
-                p.log(g.getNome() + " si sposta in: " + p.getTabellone().getCasella(target).getNome());
+                p.registra(g.getNome() + " si sposta in: " + p.getTabellone().getCasella(target).getNome());
 
                 // Se la nuova posizione è minore della precedente, ha passato il VIA
                 if (target < currentPos) {
                     g.incassa(200);
-                    p.log(g.getNome() + " ha passato il VIA! Ritira 200€");
+                    p.registra(g.getNome() + " ha passato il VIA! Ritira 200€");
                 }
 
                 Casella dest5 = p.getTabellone().getCasella(target);
@@ -100,7 +100,7 @@ class Carta {
                 break;
 
             default:
-                p.log("Carta senza effetto trattato in questo switch.");
+                p.registra("Carta senza effetto trattato in questo switch.");
         }
     }
 

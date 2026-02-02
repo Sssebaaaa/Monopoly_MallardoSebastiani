@@ -72,13 +72,13 @@ class Casella_terreno extends Casella {
         if (this.proprietario != null && this.proprietario != g) {
             // Pagamento dell'affitto al proprietario
             int affitto = calcolaAffitto();
-            p.log(g.getNome() + " paga " + affitto + "€ di affitto a " + proprietario.getNome());
+            p.registra(g.getNome() + " paga " + affitto + "€ di affitto a " + proprietario.getNome());
             g.paga(affitto, proprietario);
         } else if (this.proprietario == null) {
             // Log per indicare che è disponibile
-            p.log(nome + " è in vendita per " + valoreAcquisto + "€");
+            p.registra(nome + " è in vendita per " + valoreAcquisto + "€");
         } else if (this.proprietario == g) {
-            p.log("Sei sulla tua proprietà.");
+            p.registra("Sei sulla tua proprietà.");
         }
     }
 

@@ -17,18 +17,18 @@ public class Cheat {
     }
 
     /**
-     * Abilita/disabilita i cheat
+     * Abilita/disabilita i trucchi
      */
-    public void toggleCheats() {
+    public void invertiTrucchi() {
         cheatsAvailable = !cheatsAvailable;
         String stato = cheatsAvailable ? "ABILITATI" : "DISABILITATI";
-        System.out.println("[CHEAT] Cheat " + stato);
+        System.out.println("[TRUCCO] Trucchi " + stato);
     }
 
     /**
-     * Verifica se i cheat sono abilitati
+     * Verifica se i trucchi sono abilitati
      */
-    public boolean isCheatsAvailable() {
+    public boolean trucchiAttivi() {
         return cheatsAvailable;
     }
 
@@ -40,7 +40,7 @@ public class Cheat {
      */
     public void vaiAllaCasella(int posizioneDestinazione) {
         if (!cheatsAvailable) {
-            System.err.println("[CHEAT] Cheat non disponibile!");
+            System.err.println("[TRUCCO] Trucchetto non disponibile!");
             return;
         }
 
@@ -59,7 +59,7 @@ public class Cheat {
         // Sposta il giocatore nella nuova posizione (ASSOLUTA, non relativa)
         // NON incassa il VIA perché il teletrasporto non passa per le caselle
         giocatore.setPosizioneCorrente(posizioneDestinazione);
-        partita.log("[CHEAT] " + giocatore.getNome() + " è stato teleportato alla casella " + posizioneDestinazione);
+        partita.registra("[TRUCCO] " + giocatore.getNome() + " è stato teletrasportato alla casella " + posizioneDestinazione);
 
         // Setta il flag dadiLanciati per permettere acquisti/costruzioni
         partita.setDadiLanciati(true);
@@ -67,13 +67,13 @@ public class Cheat {
         // Esegue l'azione della casella su cui è atterrato
         Casella casellaArrivo = partita.getTabellone().getCasella(posizioneDestinazione);
         if (casellaArrivo != null) {
-            partita.log("[CHEAT] Azione della casella '" + casellaArrivo.getNome() + "' in corso...");
+            partita.registra("[TRUCCO] Azione della casella '" + casellaArrivo.getNome() + "' in corso...");
             casellaArrivo.azione(giocatore, partita);
         }
 
         // Controlla se il giocatore è fallito
         if (giocatore.getSoldi() < 0) {
-            partita.log("[CHEAT] GIOCATORE FALLITO! " + giocatore.getNome() + " esce dal gioco.");
+            partita.registra("[TRUCCO] GIOCATORE FALLITO! " + giocatore.getNome() + " esce dal gioco.");
             partita.rimuoviGiocatore(partita.getIndiceGiocatoreCorrente());
         }
     }
@@ -83,7 +83,7 @@ public class Cheat {
      */
     public void bonus200Euro() {
         if (!cheatsAvailable) {
-            System.err.println("[CHEAT] Cheat non disponibile!");
+            System.err.println("[TRUCCO] Trucchetto non disponibile!");
             return;
         }
 
@@ -94,6 +94,32 @@ public class Cheat {
         }
 
         giocatore.incassa(200);
-        partita.log("[CHEAT] " + giocatore.getNome() + " ha ricevuto 200€ di bonus!");
+        partita.registra("[TRUCCO] " + giocatore.getNome() + " ha ricevuto 200€ di bonus!");
+    }
+
+    /**
+     * Forza la bancarotta di un giocatore specifico
+     * 
+     * @param playerIndex Indice del giocatore da mandare in bancarotta
+     */
+    public void mandaInBancarotta(int playerIndex) {
+        if (!cheatsAvailable) {
+            System.err.println("[TRUCCO] Trucchetto non disponibile!");
+            return;
+        }
+
+        Giocatore[] giocatori = partita.getGiocatori();
+        if (playerIndex < 0 || playerIndex >= giocatori.length || giocatori[playerIndex] == null) {
+            System.err.println("[CHEAT] Indice giocatore non valido: " + playerIndex);
+            return;
+        }
+
+        Giocatore g = giocatori[playerIndex];
+        partita.registra("[TRUCCO] BANCAROTTA FORZATA per " + g.getNome());
+        
+        // Imposta i soldi a un valore negativo per attivare la logica di fallimento se necessario,
+        // ma chiamiamo direttamente rimuoviGiocatore per immediatezza.
+        g.setSoldi(-1);
+        partita.rimuoviGiocatore(playerIndex);
     }
 }

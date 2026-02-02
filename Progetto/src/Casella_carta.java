@@ -17,11 +17,11 @@ class Casella_carta extends Casella {
     }
 
     public void azione(Giocatore g, Partita p) {
-        p.log("Sei atterrato su: " + nome + " (" + tipoMazzo + ")");
+        p.registra("Sei atterrato su: " + nome + " (" + tipoMazzo + ")");
         Carta c = p.pesca(tipoMazzo);
 
         if (c != null) {
-            p.log("Carta pescata: " + c.getDescrizione());
+            p.registra("Carta pescata: " + c.getDescrizione());
             c.applicaEffetto(g, p);
         }
     }

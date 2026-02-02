@@ -74,7 +74,7 @@ public class AvviaGioco {
             String action = params.get("action");
 
             // Resetta gli stati delle animazioni dei soldi all'inizio di ogni azione
-            partita.resetMoneyChanges();
+            partita.azzeraVariazioni();
 
             if (action == null) {
                 return;
@@ -117,41 +117,41 @@ public class AvviaGioco {
                     break;
 
                 case "cheat_vaiallacasella":
-                    if (gameStarted && cheat.isCheatsAvailable()) {
+                    if (gameStarted && cheat.trucchiAttivi()) {
                         String casella = params.get("casella");
                         if (casella != null && !casella.isEmpty()) {
                             try {
                                 int posizioneDestinazione = Integer.parseInt(casella);
                                 cheat.vaiAllaCasella(posizioneDestinazione);
                             } catch (NumberFormatException e) {
-                                System.err.println("[CHEAT] Posizione non valida: " + casella);
+                                System.err.println("[TRUCCO] Posizione non valida: " + casella);
                             }
                         }
                     }
                     break;
 
                 case "cheat_bonus200":
-                    if (gameStarted && cheat.isCheatsAvailable()) {
+                    if (gameStarted && cheat.trucchiAttivi()) {
                         cheat.bonus200Euro();
                     }
                     break;
 
                 case "cheat_bankrupt":
-                    if (gameStarted && cheat.isCheatsAvailable()) {
+                    if (gameStarted && cheat.trucchiAttivi()) {
                         String playerIndexStr = params.get("playerIndex");
                         if (playerIndexStr != null && !playerIndexStr.isEmpty()) {
                             try {
                                 int playerIndex = Integer.parseInt(playerIndexStr);
-                                cheat.bankruptPlayer(playerIndex);
+                                cheat.mandaInBancarotta(playerIndex);
                             } catch (NumberFormatException e) {
-                                System.err.println("[CHEAT] Indice giocatore non valido: " + playerIndexStr);
+                                System.err.println("[TRUCCO] Indice giocatore non valido: " + playerIndexStr);
                             }
                         }
                     }
                     break;
 
                 case "toggle_cheat":
-                    cheat.toggleCheats();
+                    cheat.invertiTrucchi();
                     break;
             }
         }
@@ -188,7 +188,7 @@ public class AvviaGioco {
             File file = new File(webRoot, filePath);
 
             if (file.exists() && !file.isDirectory()) {
-                String contentType = getContentType(path);
+                String contentType = tipoContenuto(path);
                 t.getResponseHeaders().set("Content-Type", contentType);
                 t.sendResponseHeaders(200, file.length());
 
@@ -221,7 +221,7 @@ public class AvviaGioco {
             return new File(".");
         }
 
-        private String getContentType(String path) {
+        private String tipoContenuto(String path) {
             if (path.endsWith(".css")) {
                 return "text/css";
             }
@@ -359,8 +359,8 @@ public class AvviaGioco {
             }
         }
 
-        String coloreVincitore = getPlayerColor(indiceVincitore);
-        String iconaVincitore = getPlayerIcon(indiceVincitore);
+        String coloreVincitore = coloreGiocatore(indiceVincitore);
+        String iconaVincitore = iconaGiocatore(indiceVincitore);
 
         vittoria.append("<div id='victory-screen' class='modal-overlay victory'>");
         vittoria.append("<div class='victory-content'>");
@@ -438,7 +438,7 @@ public class AvviaGioco {
             nome = casellaObj.getNome();
         }
 
-        String lato = getCellSide(indice);
+        String lato = latoCella(indice);
         String classi = "cell " + lato;
 
         if (èAngolo(indice)) {
@@ -448,12 +448,12 @@ public class AvviaGioco {
             classi = classi + " special";
         }
 
-        String posizione = getCellGrid(indice);
+        String posizione = posizioneGriglia(indice);
 
         cella.append("<div class='").append(classi).append("' style='").append(posizione).append("'>");
 
         // Barra colore della proprietà
-        String colore = getCellColor(indice);
+        String colore = coloreCella(indice);
         if (colore != null && !èAngolo(indice) && !èSpeciale(indice)) {
             cella.append("<div class='colorbar ").append(colore).append("'></div>");
         }
@@ -461,7 +461,7 @@ public class AvviaGioco {
         cella.append("<div class='name'>").append(nome).append("</div>");
 
         // Icona speciale
-        String icona = getSpecialIcon(indice);
+        String icona = iconaValoreSpeciale(indice);
         if (icona != null) {
             cella.append("<div class='special-icon'>").append(icona).append("</div>");
         }
@@ -560,11 +560,11 @@ public class AvviaGioco {
                 testo = "Partita terminata! Vince <b>" + vincitore.getNome() + "</b>";
             } else {
                 int indiceGiocatore = partita.getIndiceGiocatoreCorrente();
-                String coloreGiocatore = getPlayerColor(indiceGiocatore);
+                String coloreG = coloreGiocatore(indiceGiocatore);
                 Giocatore g = partita.getGiocatoreCorrente();
                 String nomeGiocatore = (g != null) ? g.getNome() : "---";
 
-                testo = "Turno di <span style='color:" + coloreGiocatore + "'>" + nomeGiocatore + "</span>";
+                testo = "Turno di <span style='color:" + coloreG + "'>" + nomeGiocatore + "</span>";
             }
         } else {
             testo = "In attesa...";
@@ -585,7 +585,7 @@ public class AvviaGioco {
 
         sidebar.append("<div class='sidebar-header'>");
         sidebar.append("<h2>MONOPOLY</h2>");
-        String cheatButtonStyle = cheat.isCheatsAvailable() ? "cheat-btn-active" : "";
+        String cheatButtonStyle = cheat.trucchiAttivi() ? "cheat-btn-active" : "";
         sidebar.append("<a href='/?action=toggle_cheat' class='cheat-toggle-btn ").append(cheatButtonStyle).append("'>");
         sidebar.append("<i class='fa-solid fa-wand-magic-sparkles'></i>");
         sidebar.append("</a>");
@@ -617,7 +617,7 @@ public class AvviaGioco {
     private static String renderizzaCardCheat() {
         StringBuilder card = new StringBuilder();
 
-        if (!cheat.isCheatsAvailable()) {
+        if (!cheat.trucchiAttivi()) {
             return "";
         }
 
@@ -656,7 +656,7 @@ public class AvviaGioco {
         Giocatore[] giocatori = partita.getGiocatori();
         for (int i = 0; i < giocatori.length; i++) {
             if (giocatori[i] != null) {
-                String color = getPlayerColor(i);
+                String color = coloreGiocatore(i);
                 card.append("<a href='/?action=cheat_bankrupt&playerIndex=").append(i).append("' ");
                 card.append("class='cheat-bankrupt-btn' style='border-color:").append(color).append("; color:").append(color).append(";'>");
                 card.append("G").append(i+1);
@@ -667,8 +667,8 @@ public class AvviaGioco {
         card.append("</div>");
         card.append("</div>");
 
-        card.append("</div>"); // Card Body
-        card.append("</div>"); // Action Card
+        card.append("</div>"); // Corpo della scheda
+        card.append("</div>"); // Scheda d'azione
 
         return card.toString();
     }
@@ -702,17 +702,17 @@ public class AvviaGioco {
                     classeStatus = "eliminated";
                 }
 
-                String coloreGiocatore = getPlayerColor(i);
-                String iconaGiocatore = getPlayerIcon(i);
+                String coloreG = coloreGiocatore(i);
+                String iconaG = iconaGiocatore(i);
                 String nomeGiocatore = g.getNome();
                 int soldiGiocatore = g.getSoldi();
                 boolean inPrigione = g.isInPrigione();
 
                 stats.append("<div class='player-card ").append(classeStatus).append("' style='--highlight-color:")
-                        .append(coloreGiocatore).append("'>");
+                        .append(coloreG).append("'>");
 
-                stats.append("<div class='token-icon' style='color:").append(coloreGiocatore).append("'>");
-                stats.append(iconaGiocatore);
+                stats.append("<div class='token-icon' style='color:").append(coloreG).append("'>");
+                stats.append(iconaG);
                 stats.append("</div>");
 
                 stats.append("<div class='p-info'>");
@@ -958,8 +958,8 @@ public class AvviaGioco {
             Giocatore g = giocatori[j];
 
             if (g != null && g.getPosizioneCorrente() == indice) {
-                String colore = getPlayerColor(j);
-                String icona = getPlayerIcon(j);
+                String colore = coloreGiocatore(j);
+                String icona = iconaGiocatore(j);
                 int cambioSoldi = g.getUltimoCambioSoldi();
 
                 gettoni.append("<div class='player-token' style='background:").append(colore)
@@ -1041,7 +1041,7 @@ public class AvviaGioco {
         return false;
     }
 
-    private static String getCellSide(int indice) {
+    private static String latoCella(int indice) {
         if (indice <= 10) {
             return "bottom";
         }
@@ -1055,7 +1055,7 @@ public class AvviaGioco {
         return "right";
     }
 
-    private static String getCellGrid(int indice) {
+    private static String posizioneGriglia(int indice) {
         int riga = 0;
         int colonna = 0;
 
@@ -1076,7 +1076,7 @@ public class AvviaGioco {
         return "grid-column:" + colonna + "; grid-row:" + riga + ";";
     }
 
-    private static String getCellColor(int indice) {
+    private static String coloreCella(int indice) {
         // marrone
         if (indice == 1 || indice == 3) {
             return "bg-marrone";
@@ -1120,7 +1120,7 @@ public class AvviaGioco {
         return null;
     }
 
-    private static String getPlayerColor(int indice) {
+    private static String coloreGiocatore(int indice) {
         String[] colori = { "#ff4757", "#2ed573", "#1e90ff", "#ffa502" };
 
         if (indice >= 0 && indice < colori.length) {
@@ -1130,7 +1130,7 @@ public class AvviaGioco {
         return "#000";
     }
 
-    private static String getPlayerIcon(int indice) {
+    private static String iconaGiocatore(int indice) {
         String[] icone = { "fa-car", "fa-ship", "fa-plane", "fa-dog" };
 
         if (indice >= 0 && indice < icone.length) {
@@ -1141,7 +1141,7 @@ public class AvviaGioco {
         return "P";
     }
 
-    private static String getSpecialIcon(int indice) {
+    private static String iconaValoreSpeciale(int indice) {
         // stazioni
         if (indice == 5 || indice == 15 || indice == 25 || indice == 35) {
             return "<i class='fa-solid fa-train-subway'></i>";
