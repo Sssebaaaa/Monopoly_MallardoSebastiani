@@ -14,6 +14,11 @@ public class Partita {
     private String ultimoTipoCarta;
     private boolean dadiLanciati = false;
     private boolean justExitedJail = false;
+    private Giocatore vincitore = null;
+
+    public Giocatore getVincitore() {
+        return vincitore;
+    }
 
     public boolean isDadiLanciati() {
         return dadiLanciati;
@@ -46,6 +51,7 @@ public class Partita {
 
         giocatoriAttivi = 4;
         turnoCorrente = 0;
+        vincitore = null;
         log("Partita iniziata! Tocca al " + getGiocatoreCorrente().getNome());
 
         // Setup Tabellone
@@ -332,7 +338,10 @@ public class Partita {
         mazzoProbabilita.mescola();
     }
 
-    private void resetMoneyChanges() {
+    public void resetMoneyChanges() {
+        if (giocatori == null) {
+            return;
+        }
         for (Giocatore g : giocatori) {
             if (g != null)
                 g.setUltimoCambioSoldi(0);
@@ -446,7 +455,20 @@ public class Partita {
         }
         giocatori[indice] = null;
         giocatoriAttivi--;
-        passaTurno();
+
+        // Controlla se c'è un vincitore
+        if (giocatoriAttivi == 1) {
+            for (int i = 0; i < giocatori.length; i++) {
+                if (giocatori[i] != null) {
+                    vincitore = giocatori[i];
+                    turnoCorrente = i; // Imposta il turno sul vincitore per evitare null pointer
+                    log("ABBIAMO UN VINCITORE! " + vincitore.getNome() + " ha vinto la partita!");
+                    break;
+                }
+            }
+        } else {
+            passaTurno();
+        }
     }
 
     public void clearLogs() {

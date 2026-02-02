@@ -73,6 +73,9 @@ public class AvviaGioco {
             // mappa le azioni ricevute via query string alle operazioni di Partita
             String action = params.get("action");
 
+            // Resetta gli stati delle animazioni dei soldi all'inizio di ogni azione
+            partita.resetMoneyChanges();
+
             if (action == null) {
                 return;
             }
@@ -130,6 +133,20 @@ public class AvviaGioco {
                 case "cheat_bonus200":
                     if (gameStarted && cheat.isCheatsAvailable()) {
                         cheat.bonus200Euro();
+                    }
+                    break;
+
+                case "cheat_bankrupt":
+                    if (gameStarted && cheat.isCheatsAvailable()) {
+                        String playerIndexStr = params.get("playerIndex");
+                        if (playerIndexStr != null && !playerIndexStr.isEmpty()) {
+                            try {
+                                int playerIndex = Integer.parseInt(playerIndexStr);
+                                cheat.bankruptPlayer(playerIndex);
+                            } catch (NumberFormatException e) {
+                                System.err.println("[CHEAT] Indice giocatore non valido: " + playerIndexStr);
+                            }
+                        }
                     }
                     break;
 
@@ -275,6 +292,13 @@ public class AvviaGioco {
             html.append(menu);
         }
 
+        // Se c'è un vincitore, mostra la schermata di vittoria
+        Giocatore vincitore = partita.getVincitore();
+        if (vincitore != null) {
+            String vittoria = renderizzaSchermataVittoria(vincitore);
+            html.append(vittoria);
+        }
+
         html.append("<div class='game-board-wrapper'>");
         String tabellone = renderizzaTabellone();
         html.append(tabellone);
@@ -319,6 +343,57 @@ public class AvviaGioco {
         menu.append("</div>");
 
         return menu.toString();
+    }
+
+    // Schermata di vittoria
+    private static String renderizzaSchermataVittoria(Giocatore vincitore) {
+        StringBuilder vittoria = new StringBuilder();
+
+        // Trova l'indice del vincitore per il colore e l'icona
+        int indiceVincitore = -1;
+        Giocatore[] giocatori = partita.getGiocatori();
+        for (int i = 0; i < giocatori.length; i++) {
+            if (giocatori[i] == vincitore) {
+                indiceVincitore = i;
+                break;
+            }
+        }
+
+        String coloreVincitore = getPlayerColor(indiceVincitore);
+        String iconaVincitore = getPlayerIcon(indiceVincitore);
+
+        vittoria.append("<div id='victory-screen' class='modal-overlay victory'>");
+        vittoria.append("<div class='victory-content'>");
+
+        vittoria.append("<div class='confetti-container'></div>");
+
+        vittoria.append("<div class='trophy-icon'><i class='fa-solid fa-trophy'></i></div>");
+        vittoria.append("<h1 class='victory-title'>VITTORIA!</h1>");
+
+        vittoria.append("<div class='winner-announce'>");
+        vittoria.append("<div class='winner-avatar' style='color:").append(coloreVincitore).append("'>");
+        vittoria.append(iconaVincitore);
+        vittoria.append("</div>");
+        vittoria.append("<div class='winner-name'>").append(vincitore.getNome()).append("</div>");
+        vittoria.append("<p class='winner-msg'>Ha dominato il mercato!</p>");
+        vittoria.append("</div>");
+
+        vittoria.append("<div class='victory-stats'>");
+        vittoria.append("<div class='stat-item'>");
+        vittoria.append("<span class='stat-label'>Patrimonio Finale</span>");
+        vittoria.append("<span class='stat-value'>€ ").append(vincitore.getSoldi()).append("</span>");
+        vittoria.append("</div>");
+        vittoria.append("</div>");
+
+        vittoria.append("<div class='menu-actions'>");
+        vittoria.append(
+                "<a href='/?action=newgame' class='menu-btn primary victory-btn'><i class='fa-solid fa-rotate-left'></i> GIOCA ANCORA</a>");
+        vittoria.append("</div>");
+
+        vittoria.append("</div>");
+        vittoria.append("</div>");
+
+        return vittoria.toString();
     }
 
     // Tabellone di gioco (griglia con 40 caselle)
@@ -447,8 +522,8 @@ public class AvviaGioco {
     private static String renderizzaPulsantiAzione() {
         StringBuilder pulsanti = new StringBuilder();
 
-        if (!gameStarted) {
-            pulsanti.append("<button class='action-btn' disabled>LANCIA DADI</button>");
+        if (!gameStarted || partita.getVincitore() != null) {
+            pulsanti.append("<button class='action-btn' disabled>GIOCO TERMINATO</button>");
             return pulsanti.toString();
         }
 
@@ -480,12 +555,17 @@ public class AvviaGioco {
 
         String testo = "";
         if (gameStarted) {
-            int indiceGiocatore = partita.getIndiceGiocatoreCorrente();
-            String coloreGiocatore = getPlayerColor(indiceGiocatore);
-            Giocatore g = partita.getGiocatoreCorrente();
-            String nomeGiocatore = g.getNome();
+            Giocatore vincitore = partita.getVincitore();
+            if (vincitore != null) {
+                testo = "Partita terminata! Vince <b>" + vincitore.getNome() + "</b>";
+            } else {
+                int indiceGiocatore = partita.getIndiceGiocatoreCorrente();
+                String coloreGiocatore = getPlayerColor(indiceGiocatore);
+                Giocatore g = partita.getGiocatoreCorrente();
+                String nomeGiocatore = (g != null) ? g.getNome() : "---";
 
-            testo = "Turno di <span style='color:" + coloreGiocatore + "'>" + nomeGiocatore + "</span>";
+                testo = "Turno di <span style='color:" + coloreGiocatore + "'>" + nomeGiocatore + "</span>";
+            }
         } else {
             testo = "In attesa...";
         }
@@ -520,8 +600,11 @@ public class AvviaGioco {
             String cheatCard = renderizzaCardCheat();
             sidebar.append(cheatCard);
 
-            String azioni = renderizzaAzioniContextoCorrente();
-            sidebar.append(azioni);
+            // Se non c'è un vincitore, mostra le azioni di contesto
+            if (partita.getVincitore() == null) {
+                String azioni = renderizzaAzioniContextoCorrente();
+                sidebar.append(azioni);
+            }
         }
 
         sidebar.append("</div>");
@@ -554,6 +637,8 @@ public class AvviaGioco {
         card.append("<a href='javascript:void(0)' onclick=\"document.location='/?action=cheat_vaiallacasella&casella=' + document.getElementById('casella-input').value\" class='cheat-action-btn'>");
         card.append("<i class='fa-solid fa-arrow-right'></i> VAI");
         card.append("</a>");
+        card.append("</div>"); // Chiusura corretta di cheat-input-group
+        card.append("</div>");
 
         // Sezione "+200 Euro"
         card.append("<div class='cheat-action'>");
@@ -563,8 +648,27 @@ public class AvviaGioco {
         card.append("<p class='cheat-hint'>Guadagna 200€ istantaneamente</p>");
         card.append("</div>");
 
+        // Sezione Bancarotta
+        card.append("<div class='cheat-action'>");
+        card.append("<p class='cheat-label'><i class='fa-solid fa-skull'></i> Bancarotta</p>");
+        card.append("<div class='cheat-bankrupt-group'>");
+        
+        Giocatore[] giocatori = partita.getGiocatori();
+        for (int i = 0; i < giocatori.length; i++) {
+            if (giocatori[i] != null) {
+                String color = getPlayerColor(i);
+                card.append("<a href='/?action=cheat_bankrupt&playerIndex=").append(i).append("' ");
+                card.append("class='cheat-bankrupt-btn' style='border-color:").append(color).append("; color:").append(color).append(";'>");
+                card.append("G").append(i+1);
+                card.append("</a>");
+            }
+        }
+        
         card.append("</div>");
         card.append("</div>");
+
+        card.append("</div>"); // Card Body
+        card.append("</div>"); // Action Card
 
         return card.toString();
     }
@@ -637,6 +741,10 @@ public class AvviaGioco {
         StringBuilder azioni = new StringBuilder();
 
         Giocatore giocatoreCorrente = partita.getGiocatoreCorrente();
+        if (giocatoreCorrente == null) {
+            return "";
+        }
+        
         int posizioneCorrente = giocatoreCorrente.getPosizioneCorrente();
         Casella casellaCorrente = partita.getTabellone().getCasella(posizioneCorrente);
 
@@ -678,6 +786,9 @@ public class AvviaGioco {
     // CARD: acquisto / costruzione (ostra opzioni di acquisto o aggiunta casa se
     // applicabile)
     private static String renderizzaCardAcquistoOCostruzione(Giocatore giocatore, Casella casella) {
+        if (giocatore == null || casella == null) {
+            return "";
+        }
         StringBuilder card = new StringBuilder();
         // Controlla lo stato di proprietà e il prezzo (se applicabile)
         int prezzo = -1;
